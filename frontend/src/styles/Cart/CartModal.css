@@ -1,0 +1,165 @@
+/* CartModal.css */
+
+/* Модальное окно */
+.ReactModal__Content {
+  width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ReactModal__Overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Заголовок */
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Содержимое корзины */
+.cart-items {
+  width: 100%;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+.empty-cart-message {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+}
+
+/* Каждый товар в корзине */
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.cart-item:hover {
+  background-color: #f1f1f1;
+}
+
+/* Изображение товара */
+.cart-item-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Детали товара */
+.item-details {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  flex-grow: 1;
+}
+
+.item-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.item-price {
+  font-size: 14px;
+  color: #777;
+}
+
+.item-quantity {
+  display: flex;
+  align-items: center;
+}
+
+/* Кнопки для изменения количества */
+.quantity-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  margin: 0 5px;
+}
+
+.quantity-button:hover {
+  background-color: #45a049;
+}
+
+.quantity-button:disabled {
+  background-color: #d3d3d3;
+  cursor: not-allowed;
+}
+
+/* Кнопка удаления */
+.delete-button {
+  background-color: #FF6347;
+  color: white;
+  padding: 8px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #e55347;
+}
+
+/* Сообщения об ошибках */
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Кнопки действия внизу */
+.checkout-actions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Кнопки для оформления заказа и закрытия */
+.checkout-button,
+.close-button {
+  width: 48%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.checkout-button:hover,
+.close-button:hover {
+  background-color: #0056b3;
+}
+
+.checkout-button:active,
+.close-button:active {
+  background-color: #003f89;
+}
