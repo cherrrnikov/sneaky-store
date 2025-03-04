@@ -14,6 +14,8 @@ public interface OrderService {
 
     List<OrderSummaryDTO> getAllOrders();
 
+    List<OrderDTO> getOrdersByUserId(Long userId);
+
     List<OrderDTO> getAllOrdersWithDetails();
 
     void addToOrder(Long userId, OrderItemDTO orderItemDTO);

@@ -41,6 +41,12 @@ public class OrderController {
         return ResponseEntity.ok(orderSummaries);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByUserId(@PathVariable("userId") Long userId) {
+        List<OrderDTO> orderDTOS = orderService.getOrdersByUserId(userId);
+        return orderDTOS != null ? ResponseEntity.ok(orderDTOS) : ResponseEntity.notFound().build();
+    }
+
     @GetMapping("/details")
     public ResponseEntity<List<OrderDTO>> getAllOrdersWithDetails() {
         List<OrderDTO> orderDTOs = orderService.getAllOrdersWithDetails();

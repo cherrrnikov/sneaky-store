@@ -3,14 +3,17 @@ package com.chernikov.sneaky_store.service.impl;
 import com.chernikov.sneaky_store.dto.order.OrderCreateDTO;
 import com.chernikov.sneaky_store.dto.order.OrderDTO;
 import com.chernikov.sneaky_store.dto.order.OrderSummaryDTO;
+import com.chernikov.sneaky_store.dto.order_item.OrderItemCreateDTO;
 import com.chernikov.sneaky_store.dto.order_item.OrderItemDTO;
 import com.chernikov.sneaky_store.entity.*;
 import com.chernikov.sneaky_store.mapper.order.OrderCreateMapper;
 import com.chernikov.sneaky_store.mapper.order.OrderMapper;
 import com.chernikov.sneaky_store.mapper.order.OrderSummaryMapper;
+import com.chernikov.sneaky_store.mapper.order_item.OrderItemCreateMapper;
 import com.chernikov.sneaky_store.repository.CartRepository;
 import com.chernikov.sneaky_store.repository.OrderRepository;
 import com.chernikov.sneaky_store.repository.ProductRepository;
+import com.chernikov.sneaky_store.service.CartService;
 import com.chernikov.sneaky_store.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,29 +31,55 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
     private final OrderSummaryMapper orderSummaryMapper;
     private final OrderCreateMapper orderCreateMapper;
-    private final CartRepository cartRepository;
     private final ProductRepository productRepository;
+    private final CartService cartService;
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
                             OrderMapper orderMapper,
                             OrderSummaryMapper orderSummaryMapper,
                             OrderCreateMapper orderCreateMapper,
-                            CartRepository cartRepository,
+                            CartService cartService,
                             ProductRepository productRepository
     ) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
         this.orderSummaryMapper = orderSummaryMapper;
         this.orderCreateMapper = orderCreateMapper;
-        this.cartRepository = cartRepository;
+        this.cartService = cartService;
         this.productRepository = productRepository;
     }
 
     @Override
     public OrderDTO createOrder(OrderCreateDTO orderCreateDTO) {
         Order order = orderCreateMapper.orderCreateDTOToOrder(orderCreateDTO);
+        order.setOrderDate(LocalDateTime.now());
+
+        order.getOrderItems().forEach(orderItem -> {
+            Product product = productRepository.findById(orderItem.getProduct().getId())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+
+            // Убедитесь, что цена и название товара корректно присваиваются
+            orderItem.setProduct(product);
+            orderItem.setPrice(product.getPrice());
+        });
+
+        // Если цена заказа не рассчитывается в других местах, посчитайте её вручную
+        BigDecimal totalPrice = order.getOrderItems().stream()
+                .map(item -> item.getPrice().multiply(new BigDecimal(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        order.setTotalPrice(totalPrice);
+
+        order.getOrderItems().forEach(orderItem -> {
+            orderItem.setOrder(order);
+        });
+
+        order.setStatus(OrderStatus.PENDING);
+
         Order savedOrder = orderRepository.save(order);
+
+        cartService.clearCart(orderCreateDTO.getUserID());
+
         return orderMapper.orderToOrderDTO(savedOrder);
     }
 
@@ -66,6 +95,14 @@ public class OrderServiceImpl implements OrderService {
         return ((List<Order>) orderRepository.findAll())
                 .stream()
                 .map(orderSummaryMapper::orderToOrderSummaryDTO)
+                .toList();
+    }
+
+    @Override
+    public List<OrderDTO> getOrdersByUserId(Long userId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders.stream()
+                .map(orderMapper::orderToOrderDTO)
                 .toList();
     }
 
