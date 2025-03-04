@@ -5,11 +5,13 @@ import AuthContext from "../AuthContext";
 import "../../styles/HomePage/Header.css";
 import SearchForm from "../SearchForm";
 import CartModal from "../Cart/CartModal";
+import UserMenuModal from "../UserMenuModal";
 
 const Header = ({ renderSearchForm }) => {
   const { user, logout, isAuthenticated } = useContext(AuthContext);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLikedClick = () => {
@@ -37,6 +39,19 @@ const Header = ({ renderSearchForm }) => {
       setIsLoginModalOpen(true);
     }
   }
+
+  const handleUserMenuClick = () => {
+    if (isAuthenticated) {
+      setIsUserMenuOpen(true); // Открываем меню пользователя
+    } else {
+      setIsLoginModalOpen(true); // Открываем окно логина, если не авторизован
+    }
+  };
+
+  const handleLogout = () => {
+    logout();  // Логика выхода из системы
+    setIsUserMenuOpen(false);  // Закрываем меню пользователя после выхода
+  };
 
   return (
     <header id="header" className="w-full bg-white shadow-md px-4 py-3 md:py-4 md:px-4 flex justify-center">
@@ -86,7 +101,7 @@ const Header = ({ renderSearchForm }) => {
             </button>
 
             {isAuthenticated ? (
-              <button className="w-9 h-8 flex items-center justify-center" onClick={logout}>
+              <button className="w-9 h-8 flex items-center justify-center" onClick={handleUserMenuClick}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="hover:fill-black">
                   <path d="M10 9V15M14 9V15M3 12H21M8 19H16C17.1046 19 18 18.1046 18 17V7C18 5.89543 17.1046 5 16 5H8C6.89543 5 6 5.89543 6 7V17C6 18.1046 6.89543 19 8 19Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -104,6 +119,7 @@ const Header = ({ renderSearchForm }) => {
 
       <LoginModal isOpen={isLoginModalOpen} onClose={closeModal} />
       <CartModal isOpen={isCartModalOpen} onClose={() => setIsCartModalOpen(false)} />
+      <UserMenuModal isOpen={isUserMenuOpen} onClose={() => setIsUserMenuOpen(false)} user={user} onLogout={handleLogout} />
     </header>
   );
 };

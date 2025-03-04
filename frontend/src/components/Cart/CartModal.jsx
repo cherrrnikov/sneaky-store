@@ -113,23 +113,27 @@ const CartModal = ({ isOpen, onClose }) => {
   };
 
 
-  const handleCheckoutSubmit = async (orderData) => {
-    try {
-      console.log(orderData)
-      // Отправляем данные на сервер для создания заказа
-      const response = await api.post("/orders", orderData);
-      console.log("Заказ создан:", response.data);
-
-      // Очищаем корзину пользователя (если нужно)
-      setCart([]);
-
-      // Закрываем модальное окно оформления заказа
-      setIsCheckoutOpen(false);
-      onClose(); // Закрываем модальное окно корзины
-    } catch (error) {
-      setError("Ошибка при оформлении заказа.");
-    }
-  };
+  // const handleCheckoutSubmit = async (orderData) => {
+  //   console.log("DATA", orderData)
+  //   try {
+  //     const response = await api.post("/orders", {
+  //       userID: orderData.userID,
+  //       deliveryAddress: orderData.deliveryAddress,
+  //       orderItems: orderData.orderItems, // Отправляем товары сразу
+  //       totalPrice: orderData.totalPrice,  // Передаем общую стоимость
+  //     });
+  
+  //     const createdOrder = response.data; // Получаем созданный заказ
+  //     console.log("Создан заказ: ", createdOrder);
+  
+  //     setCart([]); // Очищаем корзину после успешного оформления заказа
+  //     setIsCheckoutOpen(false); // Закрываем модальное окно оформления заказа
+  //     onClose(); // Закрываем модальное окно корзины
+  //   } catch (error) {
+  //     setError("Ошибка при оформлении заказа.");
+  //     console.error("Ошибка оформления заказа:", error);
+  //   }
+  // };
 
   return (
     <>
@@ -200,9 +204,9 @@ const CartModal = ({ isOpen, onClose }) => {
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
         cartItems={cart}
-        onSubmit={handleCheckoutSubmit}
         products={products}  // Pass products here
         userID={user?.id} 
+        setCart={setCart}
       />
 
     </>

@@ -1,38 +1,57 @@
 import React, { useState, useEffect } from "react";
 import ReactModal from "react-modal";
+import api from "../services/api";
 
 ReactModal.setAppElement("#root");
 
-const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, products, userID }) => {
+const CheckoutModal = ({ isOpen, onClose, cartItems, products, userID, setCart }) => {
   const [deliveryAddress, setDeliveryAddress] = useState("");
-  const [totalPrice, setTotalPrice] = useState(0);
-
-  // Рассчитываем общую стоимость и привязываем продукты к корзине
-  useEffect(() => {
-    const total = cartItems.reduce((sum, item) => {
+  const [error, setError] = useState("");
+  
+  // Функция для подсчета общей стоимости
+  const calculateTotalPrice = () => {
+    return cartItems.reduce((sum, item) => {
       const product = products.find((p) => p.id === item.productID);
       if (product) {
         return sum + product.price * item.quantity;
       }
       return sum;
     }, 0);
-    setTotalPrice(total);
-  }, [cartItems, products]);
+  };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const totalPrice = calculateTotalPrice(); // Рекомендуется вычислять стоимость тут
+
     const orderData = {
       userID, // ID пользователя
-      deliveryAddress, // Адрес доставки // Общая стоимость
+      deliveryAddress, // Адрес доставки
+      totalPrice,
       orderItems: cartItems.map((item) => {
         const product = products.find((p) => p.id === item.productID); // Найдем продукт в списке
         return {
-          productID: item.productID, // ID товара
-          quantity: item.quantity, // Количество
-          price: product?.price || 0, // Цена за единицу, если есть
+          productID: item.productID,
+          productName: product?.name || "Unmatched product",
+          quantity: item.quantity,
+          price: product?.price || 0,
         };
       }),
     };
-    onSubmit(orderData); // Передаем данные в родительский компонент
+
+    console.log("Order Data to submit:", orderData); // Добавим логирование для проверки
+
+    try {
+      const response = await api.post("/orders", orderData); // Отправка заказа на сервер
+      const createdOrder = response.data; // Получаем созданный заказ
+      console.log("Создан заказ: ", createdOrder);
+
+
+      // Очищаем корзину после успешного оформления заказа
+      setCart([]);
+      onClose(); // Закрываем модальное окно оформления заказа
+    } catch (error) {
+      setError("Ошибка при оформлении заказа.");
+      console.error("Ошибка оформления заказа:", error);
+    }
   };
 
   return (
@@ -62,12 +81,13 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, products, userID 
         <label>
           Адрес доставки:
           <input
+            required
             type="text"
             value={deliveryAddress}
             onChange={(e) => setDeliveryAddress(e.target.value)}
           />
         </label>
-        <div className="total-price">Общая стоимость: ${totalPrice}</div>
+        <div className="total-price">Общая стоимость: ${calculateTotalPrice()}</div>
       </div>
       <div className="checkout-actions">
         <button className="submit-button" onClick={handleSubmit}>

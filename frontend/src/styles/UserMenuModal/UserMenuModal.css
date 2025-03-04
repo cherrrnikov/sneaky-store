@@ -1,0 +1,70 @@
+/* UserMenuModal.css */
+.user-menu-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background-color: white;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+  }
+  
+  .user-menu-modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  
+  .close-btn {
+    align-self: flex-end;
+    font-size: 24px;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  
+  .user-info h3 {
+    margin: 0;
+    font-size: 20px;
+  }
+  
+  .user-info p {
+    margin-top: 5px;
+    font-size: 14px;
+  }
+  
+  .menu-links .menu-link {
+    margin-top: 20px;
+    text-decoration: none;
+    font-size: 16px;
+    color: black;
+    transition: color 0.3s;
+  }
+  
+  .menu-links .menu-link:hover {
+    color: gray;
+  }
+  
+  .logout-button {
+    margin-top: auto;
+  }
+  
+  .logout-button button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .logout-button button:hover {
+    background-color: #d32f2f;
+  }
+  
