@@ -109,6 +109,9 @@ export const AuthProvider = ({ children }) => {
         likedProducts: Array.isArray(data) ? data : [],
       }));
     } catch (error) {
+      if (error.response?.status === 401) {
+        logout(); // Если токен истек или неверный
+      }
       console.error("Error loading liked products", error);
     }
   };
@@ -125,6 +128,9 @@ export const AuthProvider = ({ children }) => {
       }));
       console.log("Cart:", data.cartItems)
     } catch (error) {
+      if (error.response?.status === 401) {
+        logout(); // Если токен истек или неверный
+      }
       console.error("Error loading cart products", error);
     }
   }
@@ -159,6 +165,9 @@ export const AuthProvider = ({ children }) => {
         }));
       }
     } catch (error) {
+      if (error.response?.status === 401) {
+        logout(); // Если токен истек или неверный
+      }
       console.error("Error toggling like", error);
     }
   };
@@ -206,6 +215,9 @@ export const AuthProvider = ({ children }) => {
         }
       }
     } catch (error) {
+      if (error.response?.status === 401) {
+        logout(); // Если токен истек или неверный
+      }
       console.error("Error toggling cart product", error);
     }
   };
@@ -267,6 +279,7 @@ export const AuthProvider = ({ children }) => {
     >
       {children}
     </AuthContext.Provider>
+
   );
 };
 

@@ -1,0 +1,77 @@
+.order-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+}
+
+.order-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-card-header h3 {
+    font-size: 20px;
+    color: #333;
+}
+
+.order-card-header p {
+    font-size: 14px;
+    color: #666;
+}
+
+.order-total {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: right;
+    color: #333;
+}
+
+.toggle-details {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: color 0.2s ease-in-out;
+}
+
+.toggle-details:hover {
+    color: #0056b3;
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.order-item {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 равные секции */
+    align-items: center; /* Центрируем содержимое по вертикали */
+    gap: 10px;
+    border-top: 1px solid #e0e0e0;
+    padding: 5px 0;
+}
+
+.order-item p {
+  flex: 1; /* Заставляем каждый элемент занимать одну часть */
+  text-align: center;
+}
+
+.order-item p:first-child {
+  font-weight: bold;
+}

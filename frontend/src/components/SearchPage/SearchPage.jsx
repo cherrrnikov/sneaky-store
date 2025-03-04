@@ -66,6 +66,21 @@ const SearchPage = () => {
     }
   };
 
+  const handleProductCart = (e, productId) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (isAuthenticated) {
+      toggleCartProduct(productId);
+    } else {
+      setIsLoginModalOpen(true);
+    }
+  };
+
+  const isProductInCart = (productId) => {
+    return Array.isArray(user?.cart) && user.cart.some((item) => item.productID === productId);
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
@@ -89,10 +104,12 @@ const SearchPage = () => {
             {products.map((product) => (
               product && product.id && (
                 <ProductCard
-                  key={product.id}
-                  product={product}
-                  onLike={handleLike}
-                  isProductLiked={isProductLiked}
+                key={product.id}
+                product={product}
+                onLike={handleLike}
+                isProductLiked={isProductLiked}
+                onProductCart={handleProductCart}
+                isProductInCart={isProductInCart}
                 />
               )
             ))}

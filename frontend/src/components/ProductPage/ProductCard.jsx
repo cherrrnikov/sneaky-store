@@ -21,9 +21,9 @@ const ProductCard = ({ product, onLike, isProductLiked, onProductCart, isProduct
               width="24"
               height="24"
               viewBox="0 0 24 24"
-              fill={isProductInCart(product.id) ? "black" : "none"}
               xmlns="http://www.w3.org/2000/svg"
               className="hover:fill-black"
+              fill={isProductInCart(product.id) ? "black" : "none"}
             >
               <path
                 d="M3 3H5L6 7M6 7H21L20 13H7M6 7L7 13H20M16 18C16.5523 18 17 18.4477 17 19C17 19.5523 16.5523 20 16 20C15.4477 20 15 19.5523 15 19C15 18.4477 15.4477 18 16 18ZM10 18C10.5523 18 11 18.4477 11 19C11 19.5523 10.5523 20 10 20C9.44772 20 9 19.5523 9 19C9 18.4477 9.44772 18 10 18Z"

@@ -7,6 +7,7 @@ import BrandPage from './components/BrandPage/BrandPage';
 import SearchPage from './components/SearchPage/SearchPage';
 import { AuthProvider } from './components/AuthContext';
 import LikedPage from './components/LikedPage/LikedPage';
+import OrderPage from './components/OrderPage/OrderPage';
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
             <Route path="/brand/:brand" element={<BrandPage />} />
             <Route path="/search/:query" element={<SearchPage/>} />
             <Route path="/liked" element={<LikedPage />} />
+            <Route path="/orders" element={<OrderPage />} />
           </Routes>
         </Router>
     </AuthProvider>
