@@ -13,7 +13,7 @@ import LoginModal from "../Login/LoginModal"; // Импортируем комп
 const SearchPage = () => {
   const { query } = useParams();
   const navigate = useNavigate();
-  const { user, toggleLikeProduct, isAuthenticated } = useContext(AuthContext); // Получаем из контекста
+  const { user, toggleLikeProduct, isAuthenticated, toggleCartProduct } = useContext(AuthContext); // Получаем из контекста
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

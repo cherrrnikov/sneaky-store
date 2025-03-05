@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ReactModal from "react-modal";
 import CheckoutModal from "../CheckoutModal";
 import AuthContext from "../AuthContext";
@@ -13,7 +14,8 @@ const CartModal = ({ isOpen, onClose }) => {
   const [error, setError] = useState("");
   const [products, setProducts] = useState([]);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-
+  const [isOrderSuccessOpen, setIsOrderSuccessOpen] = useState(false); // Новое состояние для модального окна успешного заказа
+  const navigate = useNavigate();
   // Загружаем информацию о товарах
   useEffect(() => {
     if (user?.cart && user.cart.length > 0) {
@@ -27,6 +29,12 @@ const CartModal = ({ isOpen, onClose }) => {
       setCart([]);
     }
   }, [user]);
+
+  const handleCheckoutSuccess = () => {
+    setIsCheckoutOpen(false);
+    onClose(); // Закрываем корзину
+    setIsOrderSuccessOpen(true); // Открываем окно подтверждения
+  };
 
   const handleCheckoutClick = () => {
     setIsCheckoutOpen(true); // Открываем модальное окно оформления заказа
@@ -190,7 +198,7 @@ const CartModal = ({ isOpen, onClose }) => {
         </div>
         {error && <p className="error-message">{error}</p>}
         <div className="checkout-actions">
-          <button className="checkout-button" onClick={handleCheckoutClick}>
+          <button className="checkout-button" onClick={() => setIsCheckoutOpen(true)}>
             Перейти к оформлению
           </button>
           <button className="close-button" onClick={onClose}>
@@ -207,8 +215,26 @@ const CartModal = ({ isOpen, onClose }) => {
         products={products}  // Pass products here
         userID={user?.id} 
         setCart={setCart}
+        onSuccess={handleCheckoutSuccess}
       />
-
+      <ReactModal
+        isOpen={isOrderSuccessOpen}
+        onRequestClose={() => setIsOrderSuccessOpen(false)}
+        contentLabel="Order Success Modal"
+        className="ReactModal__Content"
+        overlayClassName="ReactModal__Overlay"
+      >
+        <h2 className="modal-title">Заказ оформлен!</h2>
+        <p>Спасибо за ваш заказ! Вы можете просмотреть статус заказа в разделе "Мои заказы".</p>
+        <div className="checkout-actions">
+          <button className="orders-button" onClick={() => navigate("/orders")}>
+            Мои заказы
+          </button>
+          <button className="close-button" onClick={() => setIsOrderSuccessOpen(false)}>
+            Закрыть
+          </button>
+        </div>
+      </ReactModal>
     </>
   );
 };

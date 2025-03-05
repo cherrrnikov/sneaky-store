@@ -4,7 +4,7 @@ import api from "../services/api";
 
 ReactModal.setAppElement("#root");
 
-const CheckoutModal = ({ isOpen, onClose, cartItems, products, userID, setCart }) => {
+const CheckoutModal = ({ isOpen, onClose, cartItems, products, userID, setCart, onSuccess }) => {
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [error, setError] = useState("");
   
@@ -48,6 +48,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, products, userID, setCart }
       // Очищаем корзину после успешного оформления заказа
       setCart([]);
       onClose(); // Закрываем модальное окно оформления заказа
+      onSuccess();
     } catch (error) {
       setError("Ошибка при оформлении заказа.");
       console.error("Ошибка оформления заказа:", error);

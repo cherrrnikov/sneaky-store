@@ -84,7 +84,7 @@ const CategoryPage = () => {
   };
 
   const isProductInCart = (productId) => {
-    return Array.isArray(user?.cart) && user.cart.some((item) => item.productId === productId);
+    return Array.isArray(user?.cart) && user.cart.some((item) => item.productID === productId);
   };
 
   if (loading) return <div>Loading...</div>;
