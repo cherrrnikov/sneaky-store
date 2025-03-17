@@ -19,5 +19,5 @@ npm-debug.log*
 yarn-debug.log*
 
 # Файлы с секретами
-backend/src/main/resources/application.properties
-frontend/.env
+backend/src/main/resources/
+.env

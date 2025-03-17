@@ -1,5 +1,6 @@
 package com.chernikov.sneaky_store.repository;
 
+import com.chernikov.sneaky_store.entity.Category;
 import com.chernikov.sneaky_store.entity.Product;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -21,5 +22,9 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
             "LOWER(p.size) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "LOWER(c.name) LIKE LOWER(CONCAT('%', :query, '%')))")
     List<Product> searchProducts(@Param("query") String query);
+
+    void deleteAllByManufacturer(String manufacturer);
+
+    boolean existsByManufacturer(String brandName);
 
 }

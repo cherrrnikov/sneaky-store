@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: my_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mynetwork
+
+  backend:
+    image: backend
+    container_name: backend
+    build:
+      context: ./backend 
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+        SPRING_PROFILES_ACTIVE: docker
+        JWT_SECRET: ${JWT_SECRET}
+        ALLOWED_ORIGINS: "http://localhost:5175,http://frontend:80"
+    networks:
+      - mynetwork
+
+  frontend:
+    build: 
+      context: ./frontend
+    container_name: frontend
+    environment:
+      VUE_APP_API_URL: "http://backend:8080/api"
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - mynetwork
+volumes:
+  postgres_data:
+
+networks:
+  mynetwork:
+
+  
