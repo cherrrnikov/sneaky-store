@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import AuthContext from "../../components/AuthContext"; // Если используете контекст для хранения данных о пользователе
-import api from "../../services/api";
+import UserMenuModal from "../UserMenuModal";
 
 const AdminPage = () => {
-  const { user } = useContext(AuthContext); // Получаем данные о пользователе из контекста
+  const { user, setUser } = useContext(AuthContext); // Получаем данные о пользователе из контекста
   const [loading, setLoading] = useState(true);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false); // Состояние для модального окна
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,6 +25,25 @@ const AdminPage = () => {
     setLoading(false); // Данные загружены, продолжаем работу
   }, [user, navigate]);
 
+  // Функции для перехода по разделам
+  const goToProducts = () => navigate("/admin/products");
+  const goToBrands = () => navigate("/admin/brands");
+  const goToCategories = () => navigate("/admin/categories");
+  const goToUsers = () => navigate("/admin/users");
+
+  // Функция для выхода
+  const handleLogout = () => {
+    // Очистка данных о пользователе
+    setUser(null);
+    navigate("/admin-login"); // Перенаправляем на страницу входа
+  };
+
+  // Открытие модального окна
+  const openUserMenu = () => setIsUserMenuOpen(true);
+
+  // Закрытие модального окна
+  const closeUserMenu = () => setIsUserMenuOpen(false);
+
   if (loading) {
     return <div>Загрузка...</div>;
   }
@@ -34,8 +53,32 @@ const AdminPage = () => {
       <h1>Админ-панель</h1>
       <div>
         <h2>Добро пожаловать, {user.fullName}!</h2>
-        {/* Добавьте функциональность для страницы администратора */}
+        <div>
+          <button onClick={goToProducts}>Товары</button>
+        </div>
+        <div>
+          <button onClick={goToBrands}>Бренды</button>
+        </div>
+        <div>
+          <button onClick={goToCategories}>Категории</button>
+        </div>
+        <div>
+          <button onClick={goToUsers}>Юзеры</button>
+        </div>
+
+        {/* Кнопка для открытия модального окна пользователя */}
+        <div>
+          <button onClick={openUserMenu}>Меню пользователя</button>
+        </div>
       </div>
+
+      {/* Модальное окно для отображения информации о пользователе и кнопка выхода */}
+      <UserMenuModal 
+        isOpen={isUserMenuOpen} 
+        onClose={closeUserMenu} 
+        user={user} 
+        onLogout={handleLogout} 
+      />
     </div>
   );
 };

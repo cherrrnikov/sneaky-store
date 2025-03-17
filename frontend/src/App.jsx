@@ -10,6 +10,7 @@ import LikedPage from './components/LikedPage/LikedPage';
 import OrderPage from './components/OrderPage/OrderPage';
 import AdminLoginModal from './components/Admin/AdminLoginModal';
 import AdminPage from './components/Admin/AdminPage';
+import AdminProductPage from './components/Admin/AdminProductPage';
 
 const App = () => {
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
@@ -50,6 +51,10 @@ const App = () => {
               }
             />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin/products" element={<AdminProductPage />} />
+            {/* <Route path="/admin/brands" element={<BrandsPage />} />
+            <Route path="/admin/categories" element={<CategoriesPage />} />
+            <Route path="/admin/users" element={<UsersPage />} /> */}
           </Routes>
         </Router>
     </AuthProvider>

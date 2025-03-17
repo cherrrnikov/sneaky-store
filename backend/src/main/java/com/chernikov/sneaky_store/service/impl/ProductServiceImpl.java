@@ -5,6 +5,7 @@ import com.chernikov.sneaky_store.entity.Category;
 import com.chernikov.sneaky_store.entity.Product;
 import com.chernikov.sneaky_store.mapper.ProductMapper;
 import com.chernikov.sneaky_store.repository.CategoryRepository;
+import com.chernikov.sneaky_store.repository.OrderItemRepository;
 import com.chernikov.sneaky_store.repository.ProductRepository;
 import com.chernikov.sneaky_store.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,17 @@ import java.util.stream.Collectors;
 @Transactional
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final OrderItemRepository orderItemRepository;
     private final ProductMapper productMapper;
     private final CategoryRepository categoryRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository
+    , OrderItemRepository orderItemRepository) {
         this.productRepository = productRepository;
         this.productMapper = new ProductMapper();
         this.categoryRepository = categoryRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     @Override
@@ -59,10 +63,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(Long id) {
-        if (!productRepository.existsById(id)) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if (!productOptional.isPresent()) {
             throw new RuntimeException("Product not found");
         }
-        productRepository.deleteById(id);
+
+        Product product = productOptional.get();
+
+        productRepository.delete(product);
     }
 
     @Override
