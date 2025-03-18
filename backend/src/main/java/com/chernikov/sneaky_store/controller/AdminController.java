@@ -7,6 +7,7 @@ import com.chernikov.sneaky_store.service.AdminService;
 import com.chernikov.sneaky_store.service.UserService;
 import com.chernikov.sneaky_store.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,4 +45,33 @@ public class AdminController {
         List<ProductDTO> productDTOs = productService.getAllProducts();
         return productDTOs.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(productDTOs);
     }
+
+    @PostMapping("/products")
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
+        ProductDTO productDTOCreated = productService.createProduct(productDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productDTOCreated);
+    }
+
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<ProductDTO> updateProduct(
+            @PathVariable("id") Long id,
+            @RequestBody ProductDTO productDTO) {
+        try {
+            ProductDTO updatedProductDTO = productService.updateProduct(id, productDTO);
+            return ResponseEntity.ok(updatedProductDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();  // Если товар не найден
+        }
+    }
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
+        try {
+            productService.deleteProduct(id);
+            return ResponseEntity.noContent().build();  // Возвращаем ответ 204 No Content, если товар успешно удален
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();  // Возвращаем ответ 404 Not Found, если товар не найден
+        }
+    }
+
 }
