@@ -7,6 +7,7 @@ const AuthContext = createContext({
   setUser: () => {},
   isAuthenticated: false,
   login: () => {},
+  adminLogin: () => {},
   logout: () => {},
   fetchLikedProducts: () => {},
   toggleLikeProduct: () => {},
@@ -221,10 +222,6 @@ export const AuthProvider = ({ children }) => {
       console.error("Error toggling cart product", error);
     }
   };
-  
-  
-  
-  
 
   const login = async (userData) => {
     console.log("Logging in with data:", userData);
@@ -251,6 +248,34 @@ export const AuthProvider = ({ children }) => {
     ]);
   };
 
+  const adminLogin = async (userData) => {
+    console.log("Admin logging in with data:", userData);
+
+    if (!userData.user.roles.includes("ADMIN")) {
+      console.error("Access denied. User is not an admin.");
+      logout();
+      return;
+    }
+
+    Cookies.set("accessToken", userData.accessToken, {
+      expires: 1,
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: false,
+      sameSite: "Lax",
+    });
+
+    Cookies.set("refreshToken", userData.refreshToken, {
+      expires: 7,
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: false,
+      sameSite: "Lax",
+    });
+
+    console.log("Admin cookies set:", Cookies.get("accessToken"), Cookies.get("refreshToken"));
+
+    setUser(userData.user);
+  };
+
   const logout = () => {
     console.log("Logging out...");
     Cookies.remove("accessToken");
@@ -269,7 +294,9 @@ export const AuthProvider = ({ children }) => {
         user,
         setUser,
         isAuthenticated: !!user,
+        loading,
         login,
+        adminLogin,
         logout,
         fetchLikedProducts,
         toggleLikeProduct,

@@ -8,31 +8,15 @@ import SearchPage from './components/SearchPage/SearchPage';
 import { AuthProvider } from './components/AuthContext';
 import LikedPage from './components/LikedPage/LikedPage';
 import OrderPage from './components/OrderPage/OrderPage';
-import AdminLoginModal from './components/Admin/AdminLoginModal';
+import AdminLoginPage from './components/Admin/AdminLoginPage';
 import AdminPage from './components/Admin/AdminPage';
 import AdminProductPage from './components/Admin/AdminProductPage';
+import AdminUserPage from './components/Admin/AdminUserPage';
 
 const App = () => {
-  const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
-
-  // Компонент для работы с маршрутом и открытия модалки
-  const AdminLoginRoute = () => {
-    const location = useLocation(); // Здесь useLocation теперь внутри компонента
-
-    useEffect(() => {
-      if (location.pathname === "/admin-login") {
-        setIsAdminLoginModalOpen(true); // Открываем модалку, когда путь /admin-login
-      }
-    }, [location]);
-
-    return null; // Возвращаем null, так как этот компонент ничего не рендерит
-  };
-
-  const closeAdminLoginModal = () => setIsAdminLoginModalOpen(false);
   return (
     <AuthProvider>
         <Router>
-        <AdminLoginRoute />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/product/:id" element={<ProductPage />} />
@@ -41,20 +25,10 @@ const App = () => {
             <Route path="/search/:query" element={<SearchPage/>} />
             <Route path="/liked" element={<LikedPage />} />
             <Route path="/orders" element={<OrderPage />} />
-            <Route
-              path="/admin-login"
-              element={
-                <AdminLoginModal 
-                  isOpen={isAdminLoginModalOpen} 
-                  onClose={closeAdminLoginModal} 
-                />
-              }
-            />
+            <Route path="/admin-login" element={<AdminLoginPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/admin/products" element={<AdminProductPage />} />
-            {/* <Route path="/admin/brands" element={<BrandsPage />} />
-            <Route path="/admin/categories" element={<CategoriesPage />} />
-            <Route path="/admin/users" element={<UsersPage />} /> */}
+            <Route path="/admin/users" element={<AdminUserPage />} />
           </Routes>
         </Router>
     </AuthProvider>

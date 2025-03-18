@@ -1,84 +1,69 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import AuthContext from "../AuthContext";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../../components/AuthContext"; // Если используете контекст для хранения данных о пользователе
-import UserMenuModal from "../UserMenuModal";
 
 const AdminPage = () => {
-  const { user, setUser } = useContext(AuthContext); // Получаем данные о пользователе из контекста
-  const [loading, setLoading] = useState(true);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false); // Состояние для модального окна
+  const { user, isAuthenticated, logout, loading } = useContext(AuthContext);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Проверяем, есть ли данные о пользователе
-    if (!user) {
-      navigate("/admin-login"); // Перенаправляем на страницу входа, если пользователь не авторизован
-      return;
+    if (isAuthenticated && !user?.roles.includes("ADMIN")) {
+      // Если пользователь не администратор, редиректим на страницу входа
+      navigate("/admin-login");
     }
+  }, [user, isAuthenticated, navigate]);
 
-    // Проверяем, что пользователь имеет роль ADMIN
-    if (!user.roles.includes("ADMIN")) {
-      navigate("/"); // Если роль не ADMIN, перенаправляем на главную
-      return;
-    }
-
-    setLoading(false); // Данные загружены, продолжаем работу
-  }, [user, navigate]);
-
-  // Функции для перехода по разделам
-  const goToProducts = () => navigate("/admin/products");
-  const goToBrands = () => navigate("/admin/brands");
-  const goToCategories = () => navigate("/admin/categories");
-  const goToUsers = () => navigate("/admin/users");
-
-  // Функция для выхода
   const handleLogout = () => {
-    // Очистка данных о пользователе
-    setUser(null);
-    navigate("/admin-login"); // Перенаправляем на страницу входа
+    logout(); // Используем logout из контекста для выхода
+    navigate("/admin-login"); // Редирект на страницу входа после выхода
   };
 
-  // Открытие модального окна
-  const openUserMenu = () => setIsUserMenuOpen(true);
-
-  // Закрытие модального окна
-  const closeUserMenu = () => setIsUserMenuOpen(false);
-
+  // Если данные еще загружаются
   if (loading) {
     return <div>Загрузка...</div>;
   }
 
+  // Если ошибка при запросах или другом процессе
+  if (error) {
+    return <div>Ошибка: {error}</div>;
+  }
+
+  // Если пользователь не авторизован
+  if (!isAuthenticated) {
+    return <div>Вы не авторизованы. Пожалуйста, войдите в систему.</div>;
+  }
+
+  // Если пользователь не является администратором
+  if (!user?.roles.includes("ADMIN")) {
+    return <div>Доступ запрещен: Вы не являетесь администратором.</div>;
+  }
+
   return (
-    <div>
-      <h1>Админ-панель</h1>
-      <div>
+    <div className="admin-page">
+      <div className="admin-menu">
+        {/* Меню с данными администратора */}
         <h2>Добро пожаловать, {user.fullName}!</h2>
-        <div>
-          <button onClick={goToProducts}>Товары</button>
-        </div>
-        <div>
-          <button onClick={goToBrands}>Бренды</button>
-        </div>
-        <div>
-          <button onClick={goToCategories}>Категории</button>
-        </div>
-        <div>
-          <button onClick={goToUsers}>Юзеры</button>
+        <div className="admin-info">
+          <p><strong>Имя:</strong> {user.fullName}</p>
+          <p><strong>Никнейм:</strong> {user.username}</p>
+          <p><strong>Почта:</strong> {user.email}</p>
         </div>
 
-        {/* Кнопка для открытия модального окна пользователя */}
-        <div>
-          <button onClick={openUserMenu}>Меню пользователя</button>
-        </div>
+        {/* Кнопка для выхода */}
+        <button onClick={handleLogout}>Выйти</button>
+
+        {/* Меню для навигации */}
+        <h3>Управление:</h3>
+        <ul>
+          <li>
+            <button onClick={() => navigate("/admin/products")}>Товары</button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/admin/users")}>Пользователи</button>
+          </li>
+        </ul>
       </div>
-
-      {/* Модальное окно для отображения информации о пользователе и кнопка выхода */}
-      <UserMenuModal 
-        isOpen={isUserMenuOpen} 
-        onClose={closeUserMenu} 
-        user={user} 
-        onLogout={handleLogout} 
-      />
     </div>
   );
 };

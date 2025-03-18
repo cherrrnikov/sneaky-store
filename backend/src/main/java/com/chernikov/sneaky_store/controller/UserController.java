@@ -27,12 +27,6 @@ public class UserController {
         return userDTO != null ? ResponseEntity.ok(userDTO) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> userDTOs = userService.getAllUsers();
-        return userDTOs.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(userDTOs);
-    }
-
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         UserDTO createdUser = userService.createUser(userDTO);
