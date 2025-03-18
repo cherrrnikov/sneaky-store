@@ -12,6 +12,7 @@ import AdminLoginPage from './components/Admin/AdminLoginPage';
 import AdminPage from './components/Admin/AdminPage';
 import AdminProductPage from './components/Admin/AdminProductPage';
 import AdminUserPage from './components/Admin/AdminUserPage';
+import AdminCategoryPage from './components/Admin/AdminCategoryPage';
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/admin/products" element={<AdminProductPage />} />
             <Route path="/admin/users" element={<AdminUserPage />} />
+            <Route path="/admin/categories" element={<AdminCategoryPage />} />
           </Routes>
         </Router>
     </AuthProvider>

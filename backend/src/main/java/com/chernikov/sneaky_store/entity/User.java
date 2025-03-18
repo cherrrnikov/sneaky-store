@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -46,8 +47,11 @@ public class User {
     private Set<Product> likedProducts;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id")  // явно указываем внешний ключ
+    @JoinColumn(name = "cart_id")
     private Cart cart;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Order> orders;
 
     @Column(length = 500)
     private String accessToken;

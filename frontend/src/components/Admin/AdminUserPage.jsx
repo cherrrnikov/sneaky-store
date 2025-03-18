@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import api from "../../services/api";  // Импортируем api для работы с запросами
+import api from "../../services/api"; // Импортируем API для запросов
+
+const orderStatuses = ["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"];
+const availableRoles = ["ADMIN"]; // Доступные роли, кроме USER
 
 const AdminUserPage = () => {
   const [users, setUsers] = useState([]);
@@ -8,26 +11,26 @@ const AdminUserPage = () => {
   const [orders, setOrders] = useState({});
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await api.get("/admin/users");
-        setUsers(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError("Не удалось загрузить пользователей");
-        setLoading(false);
-      }
-    };
-
     fetchUsers();
   }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await api.get("/admin/users");
+      setUsers(response.data);
+    } catch (err) {
+      setError("Не удалось загрузить пользователей");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchOrders = async (userId) => {
     try {
       const response = await api.get(`/admin/users/${userId}/orders`);
       setOrders((prevOrders) => ({
         ...prevOrders,
-        [userId]: response.data,  // Сохраняем заказы для конкретного пользователя
+        [userId]: response.data,
       }));
     } catch (err) {
       setError("Не удалось загрузить заказы пользователя");
@@ -35,16 +38,73 @@ const AdminUserPage = () => {
   };
 
   const handleToggleOrders = (userId) => {
-    // Если заказы уже загружены, просто их покажем
     if (orders[userId]) {
       setOrders((prevOrders) => ({
         ...prevOrders,
-        [userId]: null,  // Отключаем отображение заказов
+        [userId]: null,
       }));
     } else {
-      fetchOrders(userId);  // Если заказы не загружены, делаем запрос
+      fetchOrders(userId);
     }
   };
+
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      await api.put(`/admin/orders/${orderId}/status?status=${newStatus}`);
+      setOrders((prevOrders) => {
+        const updatedOrders = { ...prevOrders };
+        for (const userId in updatedOrders) {
+          updatedOrders[userId] = updatedOrders[userId].map((order) =>
+            order.id === orderId ? { ...order, status: newStatus } : order
+          );
+        }
+        return updatedOrders;
+      });
+    } catch (err) {
+      setError("Ошибка при обновлении статуса заказа");
+    }
+  };
+
+  const handleAddRole = async (userId, newRole) => {
+    try {
+      await api.put(`/admin/users/${userId}/role?role=${newRole}`);
+  
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === userId ? { ...user, roles: [...user.roles, newRole] } : user
+        )
+      );
+    } catch (err) {
+      setError("Ошибка при добавлении роли");
+    }
+  };
+  
+
+  const handleRemoveRole = async (userId, roleToRemove) => {
+    try {
+      await api.put(`/admin/users/${userId}/role?role=${roleToRemove}`);
+  
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === userId
+            ? { ...user, roles: user.roles.filter((role) => role !== roleToRemove) }
+            : user
+        )
+      );
+    } catch (err) {
+      setError("Ошибка при удалении роли");
+    }
+  };
+  
+    const handleDeleteUser = async (userId) => {
+        console.log("USERID", userId)
+    try {
+        await api.delete(`/admin/users/${userId}`);
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId)); // Удаляем пользователя из списка
+    } catch (err) {
+        setError("Ошибка при удалении пользователя");
+    }
+    };
 
   if (loading) {
     return <div>Загрузка пользователей...</div>;
@@ -60,9 +120,11 @@ const AdminUserPage = () => {
       <table>
         <thead>
           <tr>
+            <th>ID</th>
             <th>Имя</th>
             <th>Никнейм</th>
             <th>Почта</th>
+            <th>Роли</th>
             <th>Действия</th>
           </tr>
         </thead>
@@ -70,33 +132,59 @@ const AdminUserPage = () => {
           {users.map((user) => (
             <React.Fragment key={user.id}>
               <tr>
-                <td>{user.name}</td>
+                <td>{user.id}</td>
+                <td>{user.fullName}</td>
                 <td>{user.username}</td>
                 <td>{user.email}</td>
                 <td>
-                  <button onClick={() => console.log("Просмотр пользователя", user.id)}>
-                    Просмотр
-                  </button>
-                  <button onClick={() => console.log("Удалить пользователя", user.id)}>
-                    Удалить
-                  </button>
+                  {user.roles.map((role) => (
+                    <span key={role} style={{ marginRight: "10px" }}>
+                      {role}{" "}
+                      {role !== "USER" && (
+                        <button onClick={() => handleRemoveRole(user.id, role)}>❌</button>
+                      )}
+                    </span>
+                  ))}
+                  <select
+                    onChange={(e) => {
+                      handleAddRole(user.id, e.target.value);
+                      e.target.value = ""; 
+                    }}
+                  >
+                    <option value="">Добавить роль</option>
+                    {availableRoles
+                      .filter((role) => !user.roles.includes(role))
+                      .map((role) => (
+                        <option key={role} value={role}>
+                          {role}
+                        </option>
+                      ))}
+                  </select>
+                </td>
+                <td>
                   <button onClick={() => handleToggleOrders(user.id)}>
                     {orders[user.id] ? "Скрыть заказы" : "Показать заказы"}
+                  </button>
+                  <button onClick={() => handleDeleteUser(user.id)} style={{ marginLeft: "10px", color: "red" }}>
+                    Удалить
                   </button>
                 </td>
               </tr>
 
-              {/* Отображение заказов для каждого пользователя */}
+              {/* Отображение заказов пользователя */}
               {orders[user.id] && (
                 <tr>
-                  <td colSpan="4">
-                    <h4>Заказы пользователя {user.name}</h4>
+                  <td colSpan="5">
+                    <h4>Заказы пользователя {user.fullName}</h4>
                     <table>
                       <thead>
                         <tr>
-                          <th>Номер заказа</th>
+                          <th>ID</th>
                           <th>Дата заказа</th>
                           <th>Статус</th>
+                          <th>Адрес доставки</th>
+                          <th>Общая стоимость</th>
+                          <th>Товары</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -104,7 +192,29 @@ const AdminUserPage = () => {
                           <tr key={order.id}>
                             <td>{order.id}</td>
                             <td>{new Date(order.orderDate).toLocaleDateString()}</td>
-                            <td>{order.status}</td>
+                            <td>
+                              <select
+                                value={order.status}
+                                onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                              >
+                                {orderStatuses.map((status) => (
+                                  <option key={status} value={status}>
+                                    {status}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                            <td>{order.deliveryAddress}</td>
+                            <td>{order.totalPrice}</td>
+                            <td>
+                              <ul>
+                                {order.orderItems.map((item, index) => (
+                                  <li key={index}>
+                                    {item.productName} - {item.quantity} шт. ({item.price} each)
+                                  </li>
+                                ))}
+                              </ul>
+                            </td>
                           </tr>
                         ))}
                       </tbody>

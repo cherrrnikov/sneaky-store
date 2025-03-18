@@ -12,7 +12,7 @@ const Brands = () => {
     const fetchBrands = async () => {
       try {
         const response = await api.get("/products/brands");
-        setBrands(response.data);  // Сохраняем бренды
+        setBrands(Array.isArray(response.data) ? response.data : []); // Сохраняем бренды
         setLoading(false);
       } catch (err) {
         setError("Failed to load brands");

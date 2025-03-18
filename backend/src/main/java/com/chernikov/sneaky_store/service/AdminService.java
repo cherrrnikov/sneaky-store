@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface AdminService {
     List<OrderDTO> getOrdersByUserId(Long userId);
+    void updateOrderStatus(Long orderId, String status);
+    UserDTO updateUserRole(Long userId, String role);
 }

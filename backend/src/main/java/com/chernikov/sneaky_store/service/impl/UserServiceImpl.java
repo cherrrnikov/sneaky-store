@@ -70,6 +70,14 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.existsById(id)) {
             throw new RuntimeException("User not found");
         }
+
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Удалим привязанную к пользователю корзину, если она существует
+        if (user.getCart() != null) {
+            cartRepository.delete(user.getCart());  // Удаляем корзину пользователя
+        }
+
         userRepository.deleteById(id);
     }
 

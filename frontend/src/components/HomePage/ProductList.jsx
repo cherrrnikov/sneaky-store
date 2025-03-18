@@ -17,7 +17,7 @@ const ProductList = () => {
     const fetchProducts = async () => {
       try {
         const { data } = await api.get("/products");
-        setProducts(data);
+        setProducts(Array.isArray(data) ? data : []);
       } catch (error) {
         setError("Failed to fetch products");
       } finally {

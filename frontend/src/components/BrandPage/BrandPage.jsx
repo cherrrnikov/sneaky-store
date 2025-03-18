@@ -25,7 +25,7 @@ const BrandPage = () => {
     const fetchProductsByBrand = async () => {
       try {
         const response = await api.get(`/products/brand/${brand}`);
-        setProducts(response.data);
+        setProducts(Array.isArray(response.data) ? response.data : []);
         setLoading(false);
       } catch (err) {
         setError("Failed to load products for this brand");

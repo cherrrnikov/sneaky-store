@@ -31,7 +31,7 @@ const AdminPage = () => {
 
   // Если пользователь не авторизован
   if (!isAuthenticated) {
-    return <div>Вы не авторизованы. Пожалуйста, войдите в систему.</div>;
+    navigate("/admin-login");
   }
 
   // Если пользователь не является администратором
@@ -61,6 +61,9 @@ const AdminPage = () => {
           </li>
           <li>
             <button onClick={() => navigate("/admin/users")}>Пользователи</button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/admin/categories")}>Категории</button>
           </li>
         </ul>
       </div>

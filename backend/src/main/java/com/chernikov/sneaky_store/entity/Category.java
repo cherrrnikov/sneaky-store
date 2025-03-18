@@ -24,6 +24,6 @@ public class Category {
     @Column(length = 500)
     private String description;
 
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "categories", cascade = CascadeType.REMOVE)
     private List<Product> products;
 }

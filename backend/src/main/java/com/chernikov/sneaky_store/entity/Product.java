@@ -31,7 +31,7 @@ public class Product {
 
     private String photoURL;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "product_category",
             joinColumns = @JoinColumn(name = "product_id"),
