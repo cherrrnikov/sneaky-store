@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api"; // Импортируем API для запросов
+import "../../styles/Admin/AdminUserPage.css";
+import { useNavigate } from "react-router-dom";
 
 const orderStatuses = ["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"];
 const availableRoles = ["ADMIN"]; // Доступные роли, кроме USER
@@ -9,6 +11,7 @@ const AdminUserPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [orders, setOrders] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUsers();
@@ -115,8 +118,12 @@ const AdminUserPage = () => {
   }
 
   return (
-    <div>
-      <h2>Список пользователей</h2>
+    <div className="admin-user-page">
+      <div className="container admin-user-container">
+      <div className="admin-header">
+        <button className="back-button" onClick={() => navigate(-1)}>← Back</button>
+        <h2>Список пользователей</h2>
+      </div>
       <table>
         <thead>
           <tr>
@@ -137,14 +144,21 @@ const AdminUserPage = () => {
                 <td>{user.username}</td>
                 <td>{user.email}</td>
                 <td>
-                  {user.roles.map((role) => (
-                    <span key={role} style={{ marginRight: "10px" }}>
-                      {role}{" "}
-                      {role !== "USER" && (
-                        <button onClick={() => handleRemoveRole(user.id, role)}>❌</button>
-                      )}
-                    </span>
-                  ))}
+                  {user.roles
+                    .sort((a, b) => {
+                      // Always make sure 'USER' is first
+                      if (a === "USER") return -1;
+                      if (b === "USER") return 1;
+                      return 0;
+                    })
+                    .map((role) => (
+                      <span key={role} style={{ marginRight: "10px" }}>
+                        {role}{" "}
+                        {role !== "USER" && (
+                          <button onClick={() => handleRemoveRole(user.id, role)}>❌</button>
+                        )}
+                      </span>
+                    ))}
                   <select
                     onChange={(e) => {
                       handleAddRole(user.id, e.target.value);
@@ -161,16 +175,17 @@ const AdminUserPage = () => {
                       ))}
                   </select>
                 </td>
-                <td>
+
+                <td className="user-actions">
                   <button onClick={() => handleToggleOrders(user.id)}>
-                    {orders[user.id] ? "Скрыть заказы" : "Показать заказы"}
+                    {orders[user.id] ? "Скрыть" : "Заказы"}
                   </button>
-                  <button onClick={() => handleDeleteUser(user.id)} style={{ marginLeft: "10px", color: "red" }}>
+                  <button onClick={() => handleDeleteUser(user.id)}>
                     Удалить
                   </button>
                 </td>
               </tr>
-
+  
               {/* Отображение заказов пользователя */}
               {orders[user.id] && (
                 <tr>
@@ -227,7 +242,9 @@ const AdminUserPage = () => {
         </tbody>
       </table>
     </div>
+    </div>
   );
+  
 };
 
 export default AdminUserPage;

@@ -1,0 +1,176 @@
+/* Основной контейнер страницы */
+.admin-category-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    flex-grow: 1;
+    background-color: #2c3e50;
+    min-height: 100vh;
+    color: white;
+}
+
+.admin-category-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Заголовок */
+.admin-category-page h2 {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+/* Кнопка создания категории */
+.admin-category-page button {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 15px;
+}
+
+.admin-category-page button:hover {
+    background: #219150;
+    transform: scale(1.05);
+}
+
+/* Форма для создания/редактирования категорий */
+.admin-category-form {
+    background: #34495e;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.admin-category-form div {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-category-form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.admin-category-form input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Кнопки внутри формы */
+.admin-category-form button {
+    background: #2980b9;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 10px;
+}
+
+.admin-category-form button:hover {
+    background: #1f6694;
+}
+
+/* Таблица */
+.admin-category-page table {
+    width: 100%;
+    max-width: 1000px;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #ecf0f1;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Заголовок таблицы */
+.admin-category-page thead {
+    background: #2980b9;
+    color: white;
+    font-size: 18px;
+}
+
+.admin-category-page thead th {
+    padding: 12px;
+    text-align: left;
+}
+
+/* Строки таблицы */
+.admin-category-page tbody tr {
+    transition: background-color 0.2s ease;
+    color: black; /* Черный текст в строках */
+}
+
+.admin-category-page tbody tr:nth-child(even) {
+    background: #f2f2f2;
+}
+
+.admin-category-page tbody tr:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Ячейки */
+.admin-category-page td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Кнопки в таблице */
+.admin-category-page td button {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    margin-right: 5px;
+}
+
+.admin-category-page td button:hover {
+    background: #c0392b;
+    transform: scale(1.05);
+}
+
+/* Кнопка редактирования */
+.admin-category-page td button:first-child {
+    background: #f39c12;
+}
+
+.admin-category-page td button:first-child:hover {
+    background: #e67e22;
+}
+
+/* Входящие input при редактировании */
+.admin-category-page td input {
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Сообщение об ошибке */
+.error-message {
+    color: #e74c3c;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+}

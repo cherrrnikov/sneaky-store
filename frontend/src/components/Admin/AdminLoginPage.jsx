@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../AuthContext";
 import api from "../../services/api"; // Подключаем наш axios сервис
+import "../../styles/Admin/AdminLoginPage.css";
 
 const AdminLoginPage = () => {
   const { adminLogin } = useContext(AuthContext);
@@ -29,20 +30,34 @@ const AdminLoginPage = () => {
   };
 
   return (
-    <div>
-      <h2>Админ-панель: Вход</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </div>
-        <div>
-          <label>Пароль:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit">Войти</button>
-      </form>
+    <div className="login-container">
+      <div className="login-box">
+        <h2>Admin-panel</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Email:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {error && <p className="error-message">{error}</p>}
+          <button type="submit" className="login-submit-btn">
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

@@ -37,7 +37,7 @@ const UserMenuModal = ({ isOpen, onClose, user, onLogout }) => {
             Orders
           </Link>
         </div>
-        <div className="logout-button">
+        <div className="user-logout-button">
           <button onClick={onLogout}>Logout</button>
         </div>
       </div>

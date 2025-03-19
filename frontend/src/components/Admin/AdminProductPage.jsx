@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api"; // Подключаем сервис для работы с API
+import "../../styles/Admin/AdminProductPage.css";
+import { useNavigate } from "react-router-dom";
 
 const AdminProductPage = () => {
   const [products, setProducts] = useState([]);
@@ -7,8 +9,10 @@ const AdminProductPage = () => {
   const [error, setError] = useState(null);
   const [editedProductId, setEditedProductId] = useState(null); // Храним ID редактируемого товара
   const [formData, setFormData] = useState({}); // Данные для редактирования товара
+  const [newProductData, setNewProductData] = useState({});
   const [newProductFormVisible, setNewProductFormVisible] = useState(false); // Управление отображением формы для нового товара
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     // Получаем все товары при монтировании компонента
     const fetchProducts = async () => {
@@ -32,13 +36,23 @@ const AdminProductPage = () => {
     setFormData({ ...product });
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e, isNewProduct = false) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  
+    if (isNewProduct) {
+      setNewProductData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
+  
+  
 
   const handleSave = async (productId) => {
     try {
@@ -72,10 +86,10 @@ const AdminProductPage = () => {
     e.preventDefault();
 
     // Преобразуем строку категорий в массив, если они были введены
-    const categoriesArray = formData.categories ? formData.categories.split(",").map((cat) => cat.trim()) : [];
+    const categoriesArray = newProductData.categories ? newProductData.categories.split(",").map((cat) => cat.trim()) : [];
 
     const productData = {
-      ...formData,
+      ...newProductData,
       categories: categoriesArray, // Добавляем категории в виде массива
     };
 
@@ -84,7 +98,7 @@ const AdminProductPage = () => {
       if (response.status === 201) {
         setProducts([...products, response.data]); // Добавляем новый товар в список
         setNewProductFormVisible(false); // Скрываем форму
-        setFormData({}); // Очищаем форму
+        setNewProductData({}); // Очищаем форму
       }
     } catch (err) {
       setError("Не удалось создать товар.");
@@ -101,7 +115,12 @@ const AdminProductPage = () => {
 
   return (
     <div className="admin-product-page">
+      <div className="container admin-product-container">
+        
+    <div className="admin-product-header">
+      <button className="back-button" onClick={() => navigate(-1)}>← Back</button>
       <h2>Список товаров</h2>
+    </div>
 
       {/* Кнопка для отображения формы создания товара */}
       <button onClick={() => setNewProductFormVisible(!newProductFormVisible)}>
@@ -110,14 +129,14 @@ const AdminProductPage = () => {
 
       {/* Форма для создания нового товара */}
       {newProductFormVisible && (
-        <form onSubmit={handleCreateProduct}>
+        <form onSubmit={handleCreateProduct} className="admin-product-form">
           <div>
             <label>Название</label>
             <input
               type="text"
               name="name"
-              value={formData.name || ""}
-              onChange={handleChange}
+              value={newProductData.name || ""}
+              onChange={(e) => handleChange(e, true)}
               required
             />
           </div>
@@ -126,8 +145,8 @@ const AdminProductPage = () => {
             <input
               type="text"
               name="manufacturer"
-              value={formData.manufacturer || ""}
-              onChange={handleChange}
+              value={newProductData.manufacturer || ""}
+              onChange={(e) => handleChange(e, true)}
               required
             />
           </div>
@@ -136,8 +155,8 @@ const AdminProductPage = () => {
             <input
               type="text"
               name="color"
-              value={formData.color || ""}
-              onChange={handleChange}
+              value={newProductData.color || ""}
+              onChange={(e) => handleChange(e, true)}
               required
             />
           </div>
@@ -146,8 +165,8 @@ const AdminProductPage = () => {
             <input
               type="text"
               name="size"
-              value={formData.size || ""}
-              onChange={handleChange}
+              value={newProductData.size || ""}
+              onChange={(e) => handleChange(e, true)}
               required
             />
           </div>
@@ -156,8 +175,8 @@ const AdminProductPage = () => {
             <input
               type="number"
               name="price"
-              value={formData.price || ""}
-              onChange={handleChange}
+              value={newProductData.price || ""}
+              onChange={(e) => handleChange(e, true)}
               required
             />
           </div>
@@ -166,8 +185,8 @@ const AdminProductPage = () => {
             <input
               type="text"
               name="photoURL"
-              value={formData.photoURL || ""}
-              onChange={handleChange}
+              value={newProductData.photoURL || ""}
+              onChange={(e) => handleChange(e, true)}
             />
           </div>
           <div>
@@ -175,8 +194,8 @@ const AdminProductPage = () => {
             <input
               type="text"
               name="categories"
-              value={formData.categories || ""}
-              onChange={handleChange}
+              value={newProductData.categories || ""}
+              onChange={(e) => handleChange(e, true)}
             />
           </div>
           <button type="submit">Создать товар</button>
@@ -281,6 +300,7 @@ const AdminProductPage = () => {
         ) : (
           <p>Товары не найдены.</p>
         )}
+      </div>
       </div>
     </div>
   );

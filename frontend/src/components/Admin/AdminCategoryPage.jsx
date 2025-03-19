@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api"; // Подключаем сервис для работы с API
+import "../../styles/Admin/AdminCategoryPage.css";
+import { useNavigate } from "react-router-dom";
 
 const AdminCategoryPage = () => {
   const [categories, setCategories] = useState([]);
@@ -8,6 +10,7 @@ const AdminCategoryPage = () => {
   const [editedCategoryId, setEditedCategoryId] = useState(null); // Храним ID редактируемой категории
   const [formData, setFormData] = useState({}); // Данные для редактирования категории
   const [newCategoryFormVisible, setNewCategoryFormVisible] = useState(false); // Управление отображением формы для новой категории
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Получаем все категории при монтировании компонента
@@ -98,7 +101,12 @@ const AdminCategoryPage = () => {
 
   return (
     <div className="admin-category-page">
-      <h2>Список категорий</h2>
+
+      <div className="container admin-category-container">
+      <div className="admin-category-header">
+        <button className="back-button" onClick={() => navigate(-1)}>← Back</button>
+        <h2>Список категорий</h2>
+      </div>
 
       {/* Кнопка для отображения формы создания категории */}
       <button onClick={() => setNewCategoryFormVisible(!newCategoryFormVisible)}>
@@ -191,6 +199,7 @@ const AdminCategoryPage = () => {
         ) : (
           <p>Категории не найдены.</p>
         )}
+      </div>
       </div>
     </div>
   );

@@ -1,0 +1,115 @@
+/* Общий контейнер страницы администратора */
+.admin-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    flex-grow: 1;
+    min-height: 100vh;
+    color: white;
+}
+
+/* Основной контейнер */
+.admin-container {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    background: #34495e; /* Серый фон блока */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Заголовок и подзаголовок */
+.admin-header {
+    text-align: center;
+}
+
+.admin-title {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 5px;
+}
+
+.admin-subtitle {
+    font-size: 16px;
+    color: #ecf0f1;
+}
+
+/* Блок информации */
+.admin-info {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Кнопка выхода */
+.logout-button {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.logout-button:hover {
+    background: #c0392b;
+    transform: scale(1.02);
+}
+
+/* Заголовок управления */
+.admin-section-title {
+    font-size: 20px;
+    margin-top: 15px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+/* Меню управления */
+.admin-menu {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.admin-menu-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    max-width: 300px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.admin-menu-btn:hover {
+    background: #2980b9;
+    transform: scale(1.02);
+}
+
+/* Стили загрузки и ошибок */
+.loading, .error-message, .access-denied {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    color: white;
+}
