@@ -34,7 +34,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        // Извлекаем JWT токен из заголовка Authorization
         String accessToken = extractToken(request);
 
         if (accessToken != null && jwtUtil.isTokenValid(accessToken)) {
@@ -49,11 +48,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
 
-        // Продолжаем выполнение цепочки фильтров
         chain.doFilter(request, response);
     }
 
-    // Извлекаем токен из cookies
     public String extractToken(HttpServletRequest request) {
         String cookieToken = null;
         if (request.getCookies() != null) {
@@ -68,7 +65,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return cookieToken;
     }
 
-    // Извлекаем роли из токена и преобразуем в SimpleGrantedAuthority
     private List<SimpleGrantedAuthority> getAuthoritiesFromToken(String token) {
         Claims claims = jwtUtil.getClaims(token);
         List<String> roles = claims.get("roles", List.class); // Извлекаем список ролей

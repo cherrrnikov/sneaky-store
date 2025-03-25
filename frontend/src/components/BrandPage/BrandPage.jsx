@@ -3,16 +3,16 @@ import { useParams } from "react-router-dom";
 import api from "../../services/api";
 import { Link, useNavigate } from "react-router-dom";
 
-import "../../styles/BrandPage/BrandPage.css";  // Create styles for BrandPage
+import "../../styles/BrandPage/BrandPage.css";
 import Header from "../HomePage/Header";
 import Footer from "../HomePage/Footer";
 import SearchForm from "../SearchForm";
-import ProductCard from "../ProductPage/ProductCard";  // Import ProductCard component
+import ProductCard from "../ProductPage/ProductCard"; 
 import LoginModal from "../Login/LoginModal";
 import AuthContext from "../AuthContext";
 
 const BrandPage = () => {
-  const { brand } = useParams();  // Get brand name from URL
+  const { brand } = useParams(); 
   const navigate = useNavigate();
   const { user, isAuthenticated, toggleLikeProduct, fetchLikedProducts, fetchCartProducts, toggleCartProduct } = useContext(AuthContext);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -49,18 +49,17 @@ const BrandPage = () => {
   }, []);
 
   const handleLike = (e, productId) => {
-    e.stopPropagation(); // Останавливаем всплытие события
+    e.stopPropagation();
     e.preventDefault();
 
     if (isAuthenticated) {
       console.log("Toggling like for product", productId);
-      toggleLikeProduct(productId); // Обновляем лайк
+      toggleLikeProduct(productId);
     } else {
-      setIsLoginModalOpen(true); // Открываем модальное окно, если не авторизован
+      setIsLoginModalOpen(true);
     }
   };
 
-  // Check if a product is liked by the user
   const isProductLiked = (productId) => {
     return user?.likedProducts?.some((p) => p.id === productId);
   };
@@ -108,8 +107,8 @@ const BrandPage = () => {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  onLike={handleLike}       // Passing the like handler
-                  isProductLiked={isProductLiked}  // Passing the like check function
+                  onLike={handleLike}    
+                  isProductLiked={isProductLiked} 
                   onProductCart={handleProductCart}
                   isProductInCart={isProductInCart}
                 />

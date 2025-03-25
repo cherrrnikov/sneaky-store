@@ -78,11 +78,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest loginRequest, HttpServletResponse response) {
-        // Находим пользователя по email
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User doesn't exist"));
 
-        // Проверка правильности пароля
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new RuntimeException("Wrong password");
         }
@@ -90,31 +88,21 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = user.getAccessToken();
         String refreshToken = user.getRefreshToken();
 
-        // Если accessToken отсутствует или истек
         if (accessToken == null || !jwtUtil.isTokenValid(accessToken)) {
-            // Если refreshToken еще валиден, генерируем новый accessToken
             if (refreshToken != null && jwtUtil.isTokenValid(refreshToken)) {
                 accessToken = jwtUtil.generateAccessToken(user.getEmail(), user.getId(), user.getRoles());
 
-                // Обновляем accessToken в базе данных
                 user.setAccessToken(accessToken);
-
-                // Добавляем новый accessToken в cookies
             } else {
-                // Если refreshToken истек, "выкидываем" пользователя (удаляем токены)
                 user.setAccessToken(null);
                 user.setRefreshToken(null);
                 userRepository.save(user);
 
-                // Генерируем новые токены и отправляем их пользователю
                 accessToken = jwtUtil.generateAccessToken(user.getEmail(), user.getId(), user.getRoles());
                 refreshToken = jwtUtil.generateRefreshToken(user.getEmail(), user.getId());
 
-                // Обновляем токены в базе данных
                 user.setAccessToken(accessToken);
                 user.setRefreshToken(refreshToken);
-
-                // Добавляем новые токены в cookies
             }
             userRepository.save(user);
             jwtUtil.addTokenToCookies(response, accessToken, refreshToken);
@@ -123,7 +111,6 @@ public class AuthServiceImpl implements AuthService {
         System.out.println("ACCESS TOKEN: " + user.getAccessToken());
         System.out.println("REFRESH TOKEN: " + user.getRefreshToken());
 
-        // Преобразуем пользователя в DTO и отправляем ответ
         UserDTO userDTO = userMapper.userToUserDTO(user);
         return new AuthResponse(accessToken, refreshToken, userDTO);
     }

@@ -3,20 +3,17 @@ import { Link } from "react-router-dom";
 import "../styles/UserMenuModal/UserMenuModal.css";
 
 const UserMenuModal = ({ isOpen, onClose, user, onLogout }) => {
-    const modalRef = useRef(null);  // Ссылка на модальное окно
+    const modalRef = useRef(null);
 
-  // Добавляем обработчик клика по документу
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        onClose();  // Закрываем модальное окно, если клик был вне его
+        onClose(); 
       }
     };
 
-    // Добавляем событие на весь документ
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Убираем обработчик при размонтировании компонента
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };

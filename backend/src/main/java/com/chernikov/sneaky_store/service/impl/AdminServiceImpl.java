@@ -50,7 +50,7 @@ public class AdminServiceImpl implements AdminService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        order.setStatus(OrderStatus.valueOf(status.toUpperCase())); // Преобразуем строку в enum
+        order.setStatus(OrderStatus.valueOf(status.toUpperCase()));
         orderRepository.save(order);
     }
 

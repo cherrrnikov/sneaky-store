@@ -19,17 +19,14 @@ import java.util.stream.Collectors;
 @Transactional
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
-    private final OrderItemRepository orderItemRepository;
     private final ProductMapper productMapper;
     private final CategoryRepository categoryRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository
-    , OrderItemRepository orderItemRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.productMapper = new ProductMapper();
         this.categoryRepository = categoryRepository;
-        this.orderItemRepository = orderItemRepository;
     }
 
     @Override
@@ -101,11 +98,10 @@ public class ProductServiceImpl implements ProductService {
 
     public List<String> getAllBrands() {
         List<Product> products = (List<Product>) productRepository.findAll();
-        List<String> brands = products.stream()
+        return products.stream()
                 .map(Product::getManufacturer)
                 .distinct()
                 .collect(Collectors.toList());
-        return brands;
     }
 
     @Override

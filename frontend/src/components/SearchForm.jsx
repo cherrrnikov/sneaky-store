@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";  // Для редиректа на страницу поиска
+import { Link, useNavigate } from "react-router-dom"; 
 
 const SearchForm = () => {
   const [query, setQuery] = useState("");
@@ -11,9 +11,9 @@ const SearchForm = () => {
 
     if (!query.trim()) return;
 
-    setQuery(""); // очищаем поле ввода
+    setQuery("");
     if (inputRef.current) {
-      inputRef.current.blur(); // убираем фокус с поля ввода
+      inputRef.current.blur();
     }
     navigate(`/search/${query}`);
   };

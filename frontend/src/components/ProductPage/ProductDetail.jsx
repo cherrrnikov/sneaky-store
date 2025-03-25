@@ -1,43 +1,39 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../../services/api"; // Настроенный API
+import api from "../../services/api";
 import "../../styles/ProductPage/ProductDetail.css";
-import ProductCard from "../ProductPage/ProductCard";  // Импортируем компонент карточки товара
-import AuthContext from "../AuthContext"; // Импортируем контекст для проверки авторизации
+import ProductCard from "../ProductPage/ProductCard";
+import AuthContext from "../AuthContext";
 import { Link } from "react-router-dom";
 import LoginModal from "../Login/LoginModal";
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, isAuthenticated, toggleLikeProduct, fetchLikedProducts, fetchCartProducts, toggleCartProduct } = useContext(AuthContext); // Используем контекст
+  const { user, isAuthenticated, toggleLikeProduct, fetchLikedProducts, fetchCartProducts, toggleCartProduct } = useContext(AuthContext);
   const [product, setProduct] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [categoryProducts, setCategoryProducts] = useState([]);  // Для хранения товаров из той же категории
+  const [categoryProducts, setCategoryProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  // Функция для отслеживания лайков товара
   const isProductLiked = (productId) => {
     return user?.likedProducts?.some((p) => p.id === productId) || false;
   };
-  
 
-  // Логика для лайка товара
   const handleLike = (e, productId) => {
-    e.stopPropagation(); // Останавливаем всплытие события
+    e.stopPropagation(); 
     e.preventDefault();
 
     if (isAuthenticated) {
       console.log("Toggling like for product", productId);
-      toggleLikeProduct(productId); // Обновляем лайк
+      toggleLikeProduct(productId);
     } else {
-      setIsLoginModalOpen(true); // Открываем модальное окно, если не авторизован
+      setIsLoginModalOpen(true);
     }
   };
 
-  // Загружаем данные о товаре и категориях
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     const fetchProduct = async () => {

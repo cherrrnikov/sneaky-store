@@ -60,15 +60,15 @@
 
 .order-item {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 равные секции */
-    align-items: center; /* Центрируем содержимое по вертикали */
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center; 
     gap: 10px;
     border-top: 1px solid #e0e0e0;
     padding: 5px 0;
 }
 
 .order-item p {
-  flex: 1; /* Заставляем каждый элемент занимать одну часть */
+  flex: 1; 
   text-align: center;
 }
 

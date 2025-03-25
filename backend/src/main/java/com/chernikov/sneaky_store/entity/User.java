@@ -61,7 +61,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullName, email, username, password); // Исключаем cart, чтобы избежать рекурсии
+        return Objects.hash(id, fullName, email, username, password);
     }
 
     @Override

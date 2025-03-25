@@ -5,7 +5,6 @@ import SearchForm from "../SearchForm";
 const HeroSection = ({ renderSearchForm }) => {
     const [searchResults, setSearchResults] = useState([]);
 
-    // Обработчик, который обновляет список результатов поиска
     const handleSearchResults = (results) => {
         setSearchResults(results);
     };

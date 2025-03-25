@@ -32,7 +32,6 @@ public class AdminController {
         this.categoryService = categoryService;
     }
 
-    // ------------------ Методы для пользователей ------------------
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> userDTOs = userService.getAllUsers();
@@ -45,19 +44,19 @@ public class AdminController {
             UserDTO updatedUser = adminService.updateUserRole(userId, role);
             return ResponseEntity.ok(updatedUser);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build(); // Если роль недопустима
+            return ResponseEntity.badRequest().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build(); // Если пользователь не найден
+            return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
         try {
-            userService.deleteUser(id);  // вызываем сервис для удаления пользователя
-            return ResponseEntity.noContent().build(); // Возвращаем 204 No Content, если пользователь успешно удален
+            userService.deleteUser(id);
+            return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();  // Возвращаем 404 Not Found, если пользователь не найден
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -76,14 +75,12 @@ public class AdminController {
             adminService.updateOrderStatus(orderId, status);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build(); // Если статус недопустимый
+            return ResponseEntity.badRequest().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build(); // Если заказ не найден
+            return ResponseEntity.notFound().build();
         }
     }
 
-
-    // ------------------ Методы для продуктов ------------------
     @GetMapping("/products")
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
         List<ProductDTO> productDTOs = productService.getAllProducts();
@@ -102,7 +99,7 @@ public class AdminController {
             ProductDTO updatedProductDTO = productService.updateProduct(id, productDTO);
             return ResponseEntity.ok(updatedProductDTO);
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();  // Если товар не найден
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -110,13 +107,12 @@ public class AdminController {
     public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
         try {
             productService.deleteProduct(id);
-            return ResponseEntity.noContent().build();  // Возвращаем ответ 204 No Content, если товар успешно удален
+            return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();  // Возвращаем ответ 404 Not Found, если товар не найден
+            return ResponseEntity.notFound().build();
         }
     }
 
-    // ------------------ Методы для категорий ------------------
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<CategoryDTO> categoryDTOList = categoryService.getAllCategories();
@@ -145,9 +141,9 @@ public class AdminController {
     public ResponseEntity<Void> deleteCategory(@PathVariable("id") Long id) {
         try {
             categoryService.deleteCategory(id);
-            return ResponseEntity.noContent().build(); // Возвращаем ответ 204 No Content, если категория успешно удалена
+            return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build(); // Возвращаем ответ 404 Not Found, если категория не найдена
+            return ResponseEntity.notFound().build();
         }
     }
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../services/api"; // Подключаем сервис для работы с API
+import api from "../../services/api";
 import "../../styles/Admin/AdminProductPage.css";
 import { useNavigate } from "react-router-dom";
 
@@ -7,14 +7,13 @@ const AdminProductPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editedProductId, setEditedProductId] = useState(null); // Храним ID редактируемого товара
-  const [formData, setFormData] = useState({}); // Данные для редактирования товара
+  const [editedProductId, setEditedProductId] = useState(null);
+  const [formData, setFormData] = useState({}); 
   const [newProductData, setNewProductData] = useState({});
-  const [newProductFormVisible, setNewProductFormVisible] = useState(false); // Управление отображением формы для нового товара
+  const [newProductFormVisible, setNewProductFormVisible] = useState(false); 
   const navigate = useNavigate();
-  
+
   useEffect(() => {
-    // Получаем все товары при монтировании компонента
     const fetchProducts = async () => {
       try {
         const response = await api.get("/admin/products");
@@ -85,20 +84,19 @@ const AdminProductPage = () => {
   const handleCreateProduct = async (e) => {
     e.preventDefault();
 
-    // Преобразуем строку категорий в массив, если они были введены
     const categoriesArray = newProductData.categories ? newProductData.categories.split(",").map((cat) => cat.trim()) : [];
 
     const productData = {
       ...newProductData,
-      categories: categoriesArray, // Добавляем категории в виде массива
+      categories: categoriesArray,
     };
 
     try {
       const response = await api.post("/admin/products", productData);
       if (response.status === 201) {
-        setProducts([...products, response.data]); // Добавляем новый товар в список
-        setNewProductFormVisible(false); // Скрываем форму
-        setNewProductData({}); // Очищаем форму
+        setProducts([...products, response.data]);
+        setNewProductFormVisible(false); 
+        setNewProductData({}); 
       }
     } catch (err) {
       setError("Не удалось создать товар.");
@@ -122,12 +120,10 @@ const AdminProductPage = () => {
       <h2>Список товаров</h2>
     </div>
 
-      {/* Кнопка для отображения формы создания товара */}
       <button onClick={() => setNewProductFormVisible(!newProductFormVisible)}>
         {newProductFormVisible ? "Отменить создание" : "Создать товар"}
       </button>
 
-      {/* Форма для создания нового товара */}
       {newProductFormVisible && (
         <form onSubmit={handleCreateProduct} className="admin-product-form">
           <div>

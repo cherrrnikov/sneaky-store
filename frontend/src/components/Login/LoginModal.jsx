@@ -3,14 +3,15 @@ import ReactModal from "react-modal";
 import "../../styles/LoginModal/LoginModal.css";
 import AuthContext from "../AuthContext";
 import Cookies from "js-cookie";
+import api from "../../services/api";
 
 ReactModal.setAppElement("#root");
 
 const LoginModal = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState(""); // Добавляем fullName
-  const [username, setUsername] = useState(""); // Добавляем username
+  const [fullName, setFullName] = useState(""); 
+  const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const { setUser } = useContext(AuthContext);
@@ -20,55 +21,40 @@ const LoginModal = ({ isOpen, onClose }) => {
     setError("");
 
     const endpoint = isRegistering
-      ? "http://localhost:8080/api/auth/register"
-      : "http://localhost:8080/api/auth/login";
+      ? "/auth/register"
+      : "/auth/login"; 
 
     const userData = isRegistering
-      ? { fullName, username, email, password } // Добавляем данные для регистрации
+      ? { fullName, username, email, password }
       : { email, password };
 
     try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+      const response = await api.post(endpoint, userData);
 
-      if (!response.ok) {
-        throw new Error("Ошибка при обработке запроса.");
-      }
+      if (response.data.accessToken && response.data.refreshToken) {
+        Cookies.set("accessToken", response.data.accessToken, {
+          expires: 1,
+          secure: process.env.NODE_ENV === "production", 
+          httpOnly: false,
+          sameSite: "Lax",
+        });
 
-      const data = await response.json();
+        Cookies.set("refreshToken", response.data.refreshToken, {
+          expires: 7,
+          secure: process.env.NODE_ENV === "production",
+          httpOnly: false, 
+          sameSite: "Lax",
+        });
 
-// Измененный блок установки куки после логина
-  if (data.accessToken && data.refreshToken) {
-    // Устанавливаем токены в cookies
-    Cookies.set("accessToken", data.accessToken, {
-      expires: 1, // Истекает через 1 день
-      secure: false, // Не используем secure в режиме разработки
-      httpOnly: false, // Можно читать с JS
-      sameSite: "Lax", // Поддержка cross-origin запросов
-    });
+        console.log("Cookies after login:", Cookies.get("accessToken"), Cookies.get("refreshToken"));
 
-    Cookies.set("refreshToken", data.refreshToken, {
-      expires: 7, // Истекает через 7 дней
-      secure: false, // Не используем secure в режиме разработки
-      httpOnly: false, // Можно читать с JS
-      sameSite: "Lax", // Поддержка cross-origin запросов
-    });
-
-    console.log("Cookies after login:", Cookies.get("accessToken"), Cookies.get("refreshToken"));
-
-    setUser(data.user); // Сохраняем данные о пользователе
-    onClose(); // Закрываем модалку
-  }
-  else {
+        setUser(response.data.user); 
+        onClose();
+      } else {
         throw new Error("Ошибка при получении токенов.");
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || "Ошибка при обработке запроса.");
     }
   };
 

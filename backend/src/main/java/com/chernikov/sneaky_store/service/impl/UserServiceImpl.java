@@ -73,9 +73,8 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Удалим привязанную к пользователю корзину, если она существует
         if (user.getCart() != null) {
-            cartRepository.delete(user.getCart());  // Удаляем корзину пользователя
+            cartRepository.delete(user.getCart());  // Я не разобрался, почему не работает каскадное удаление, поэтому костыль
         }
 
         userRepository.deleteById(id);

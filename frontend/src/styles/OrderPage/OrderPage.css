@@ -57,3 +57,17 @@
     background: #f0f0f0;
     color: #000000;
 }
+
+@media (max-width: 420px) {
+    button.back-button.brand_back-button {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    h2.order-page_title {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+    .brand-header {
+        margin-bottom: 0px;
+    }
+  }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../../styles/OrderPage/OrderCard.css"; // Подключаем стили для карточки заказа
+import "../../styles/OrderPage/OrderCard.css";
 
 const OrderCard = ({ order }) => {
   const [showDetails, setShowDetails] = useState(false);

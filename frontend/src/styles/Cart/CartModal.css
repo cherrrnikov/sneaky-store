@@ -1,6 +1,3 @@
-/* CartModal.css */
-
-/* Модальное окно */
 .ReactModal__Content {
   width: 500px;
   margin: 0 auto;
@@ -17,14 +14,12 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* Заголовок */
 .modal-title {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
 }
 
-/* Содержимое корзины */
 .cart-items {
   width: 100%;
   max-height: 400px;
@@ -38,7 +33,6 @@
   color: #555;
 }
 
-/* Каждый товар в корзине */
 .cart-item {
   display: flex;
   justify-content: space-between;
@@ -55,7 +49,6 @@
   background-color: #f1f1f1;
 }
 
-/* Изображение товара */
 .cart-item-image {
   width: 60px;
   height: 60px;
@@ -63,7 +56,6 @@
   border-radius: 8px;
 }
 
-/* Детали товара */
 .item-details {
   display: flex;
   flex-direction: column;
@@ -87,7 +79,6 @@
   align-items: center;
 }
 
-/* Кнопки для изменения количества */
 .quantity-button {
   background-color: #4CAF50;
   color: white;
@@ -109,7 +100,6 @@
   cursor: not-allowed;
 }
 
-/* Кнопка удаления */
 .delete-button {
   background-color: #FF6347;
   color: white;
@@ -124,7 +114,6 @@
   background-color: #e55347;
 }
 
-/* Сообщения об ошибках */
 .error-message {
   color: red;
   margin-top: 10px;
@@ -132,18 +121,21 @@
   text-align: center;
 }
 
-/* Кнопки действия внизу */
 .checkout-actions {
-  display: flex;
-  justify-content: space-between;
+  align-items: center;
   width: 100%;
   margin-top: 20px;
+  gap: 10px;
 }
 
-/* Кнопки для оформления заказа и закрытия */
+.checkout-button {
+  margin-bottom: 10px;
+}
+
 .checkout-button,
-.close-button {
-  width: 48%;
+.close-button,
+.submit-button {
+  width: 100%;
   padding: 12px;
   background-color: #007bff;
   color: white;
@@ -162,4 +154,66 @@
 .checkout-button:active,
 .close-button:active {
   background-color: #003f89;
+}
+
+@media (max-width: 440px) {
+  .ReactModal__Content {
+    width: 95%; 
+    max-width: 100%; 
+    padding: 15px; 
+  }
+
+  .modal-title {
+    font-size: 20px; 
+    margin-bottom: 15px;
+  }
+
+  .cart-items {
+    max-height: 300px; 
+  }
+
+  .cart-item {
+    padding: 10px; 
+    flex-direction: column; 
+    align-items: flex-start; 
+  }
+
+  .cart-item-image {
+    width: 50px; 
+    height: 50px;
+    margin-bottom: 8px;
+  }
+
+  .item-details {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .item-name {
+    font-size: 14px;
+  }
+
+  .item-price {
+    font-size: 12px;
+  }
+
+  .quantity-button,
+  .delete-button {
+    padding: 6px 10px; 
+    font-size: 12px;
+    margin-top: 8px; 
+  }
+
+  .checkout-actions {
+    flex-direction: column; 
+    gap: 10px; 
+  }
+
+  .checkout-button,
+  .close-button,
+  .submit-button {
+    width: 100%;
+    padding: 10px; 
+    font-size: 14px;
+  }
 }

@@ -1,4 +1,3 @@
-// CategoryPage.js
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../services/api";
@@ -6,7 +5,7 @@ import "../../styles/CategoryPage/CategoryPage.css";
 import Header from "../HomePage/Header";
 import Footer from "../HomePage/Footer";
 import SearchForm from "../SearchForm";
-import AuthContext from "../AuthContext";  // Импортируем контекст
+import AuthContext from "../AuthContext";  
 import ProductCard from "../ProductPage/ProductCard"; 
 import LoginModal from "../Login/LoginModal";
 
@@ -18,7 +17,7 @@ const CategoryPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showSearchInHeader, setShowSearchInHeader] = useState(true);
-  const { user, toggleLikeProduct, isAuthenticated, fetchLikedProducts, fetchCartProducts, toggleCartProduct } = useContext(AuthContext); // Получаем из контекста
+  const { user, toggleLikeProduct, isAuthenticated, fetchLikedProducts, fetchCartProducts, toggleCartProduct } = useContext(AuthContext); 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
@@ -55,20 +54,19 @@ const CategoryPage = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Функция для проверки, лайкнут ли товар
   const isProductLiked = (productId) => {
     return user?.likedProducts?.some((product) => product.id === productId);
   };
 
   const handleLike = (e, productId) => {
-    e.stopPropagation(); // Останавливаем всплытие события
+    e.stopPropagation();
     e.preventDefault();
 
     if (isAuthenticated) {
       console.log("Toggling like for product", productId);
-      toggleLikeProduct(productId); // Обновляем лайк
+      toggleLikeProduct(productId);
     } else {
-      setIsLoginModalOpen(true); // Открываем модальное окно, если не авторизован
+      setIsLoginModalOpen(true);
     }
   };
 

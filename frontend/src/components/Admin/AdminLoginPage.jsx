@@ -1,8 +1,9 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../AuthContext";
-import api from "../../services/api"; // Подключаем наш axios сервис
+import api from "../../services/api"; 
 import "../../styles/Admin/AdminLoginPage.css";
+import Cookies from "js-cookie";
 
 const AdminLoginPage = () => {
   const { adminLogin } = useContext(AuthContext);
@@ -16,11 +17,31 @@ const AdminLoginPage = () => {
     setError("");
 
     try {
-      const response = await api.post("/auth/login", { email, password }); // Используем axios для POST запроса
-
+      const response = await api.post("/auth/login", { email, password });
       if (response.data.user.roles.includes("ADMIN")) {
-        adminLogin(response.data);  
-        navigate("/admin")
+        if (response.data.accessToken && response.data.refreshToken) {
+          Cookies.set("accessToken", response.data.accessToken, {
+            expires: 1,
+            secure: process.env.NODE_ENV === "production", 
+            httpOnly: false,
+            sameSite: "Lax",
+          });
+
+          Cookies.set("refreshToken", response.data.refreshToken, {
+            expires: 7,
+            secure: process.env.NODE_ENV === "production", 
+            httpOnly: false,
+            sameSite: "Lax", 
+          });
+          
+          console.log("Cookies after login:", Cookies.get("accessToken"), Cookies.get("refreshToken"));
+
+          adminLogin(response.data);
+
+          navigate("/admin");
+        } else {
+          throw new Error("Ошибка при получении токенов.");
+        }
       } else {
         throw new Error("Вы не админ!");
       }

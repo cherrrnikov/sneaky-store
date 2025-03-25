@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../services/api"; // Подключаем сервис для работы с API
+import api from "../../services/api"; 
 import "../../styles/Admin/AdminCategoryPage.css";
 import { useNavigate } from "react-router-dom";
 
@@ -7,13 +7,12 @@ const AdminCategoryPage = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editedCategoryId, setEditedCategoryId] = useState(null); // Храним ID редактируемой категории
-  const [formData, setFormData] = useState({}); // Данные для редактирования категории
-  const [newCategoryFormVisible, setNewCategoryFormVisible] = useState(false); // Управление отображением формы для новой категории
+  const [editedCategoryId, setEditedCategoryId] = useState(null); 
+  const [formData, setFormData] = useState({}); 
+  const [newCategoryFormVisible, setNewCategoryFormVisible] = useState(false); 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Получаем все категории при монтировании компонента
     const fetchCategories = async () => {
       try {
         const response = await api.get("/admin/categories");
@@ -82,9 +81,9 @@ const AdminCategoryPage = () => {
     try {
       const response = await api.post("/admin/categories", categoryData);
       if (response.status === 201) {
-        setCategories([...categories, response.data]); // Добавляем новую категорию в список
-        setNewCategoryFormVisible(false); // Скрываем форму
-        setFormData({}); // Очищаем форму
+        setCategories([...categories, response.data]); 
+        setNewCategoryFormVisible(false); 
+        setFormData({}); 
       }
     } catch (err) {
       setError("Не удалось создать категорию.");
@@ -108,14 +107,12 @@ const AdminCategoryPage = () => {
         <h2>Список категорий</h2>
       </div>
 
-      {/* Кнопка для отображения формы создания категории */}
       <button onClick={() => setNewCategoryFormVisible(!newCategoryFormVisible)}>
         {newCategoryFormVisible ? "Отменить создание" : "Создать категорию"}
       </button>
 
-      {/* Форма для создания новой категории */}
       {newCategoryFormVisible && (
-        <form onSubmit={handleCreateCategory}>
+        <form onSubmit={handleCreateCategory} className="admin-category-form">
           <div>
             <label>Название</label>
             <input

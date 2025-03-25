@@ -10,30 +10,27 @@ import { useNavigate } from "react-router-dom";
 
 const LikedPage = () => {
   const { user, fetchLikedProducts, toggleLikeProduct, isAuthenticated, fetchCartProducts, toggleCartProduct } = useContext(AuthContext);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // Стейт для модального окна
-  const [showSearchInHeader, setShowSearchInHeader] = useState(true); // Для отображения поиска на мобильных устройствах
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [showSearchInHeader, setShowSearchInHeader] = useState(true);
   const navigate = useNavigate();
 
-
-  // Загружаем все понравившиеся товары при монтировании компонента
   useEffect(() => {
     if (!user?.likedProducts) {
       fetchLikedProducts(); 
-      fetchCartProducts();// Если товары не загружены, загружаем их
+      fetchCartProducts();
     }
   }, [fetchLikedProducts, user?.likedProducts, user?.cart]);
 
   const likedProducts = user?.likedProducts || [];
 
-  // Обработчик лайков
   const handleLike = (e, productId) => {
-    e.stopPropagation(); // Останавливаем всплытие события
+    e.stopPropagation();
     e.preventDefault();
 
     if (isAuthenticated) {
-      toggleLikeProduct(productId); // Обновляем лайк
+      toggleLikeProduct(productId);
     } else {
-      setIsLoginModalOpen(true); // Если не авторизован - открываем модальное окно
+      setIsLoginModalOpen(true);
     }
   };
 
@@ -52,10 +49,9 @@ const LikedPage = () => {
     return Array.isArray(user?.cart) && user.cart.some((item) => item.productID === productId);
   };
 
-  // Обработка изменений для мобильного поиска
   useEffect(() => {
     const handleResize = () => {
-      setShowSearchInHeader(window.innerWidth >= 1024); // Показываем/скрываем форму поиска в header
+      setShowSearchInHeader(window.innerWidth >= 1024);
     };
 
     handleResize();
@@ -68,7 +64,6 @@ const LikedPage = () => {
       <Header renderSearchForm={showSearchInHeader} />
       <div className="liked-page">
         <div className="container">
-          {/* Заголовок страницы с возможностью поиска */}
           <div className="liked-page-header">
             <button className="back-button brand_back-button" onClick={() => navigate(-1)}>← Back</button>
             <h2 className="liked-page-title">Liked Products</h2>
@@ -78,8 +73,6 @@ const LikedPage = () => {
               </div>
             )}
           </div>
-          
-          {/* Список товаров */}
           {likedProducts.length > 0 ? (
             <div className="product-list">
               {likedProducts.map((product) => (

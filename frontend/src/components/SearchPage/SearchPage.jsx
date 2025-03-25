@@ -6,19 +6,19 @@ import Footer from "../HomePage/Footer";
 import "../../styles/SearchPage.css";
 import { Link } from "react-router-dom";
 import SearchForm from "../SearchForm";
-import AuthContext from "../AuthContext";  // Импортируем контекст
-import ProductCard from "../ProductPage/ProductCard"; // Импортируем новый компонент карточки товара
-import LoginModal from "../Login/LoginModal"; // Импортируем компонент модального окна
+import AuthContext from "../AuthContext";
+import ProductCard from "../ProductPage/ProductCard"; 
+import LoginModal from "../Login/LoginModal"; 
 
 const SearchPage = () => {
   const { query } = useParams();
   const navigate = useNavigate();
-  const { user, toggleLikeProduct, isAuthenticated, toggleCartProduct } = useContext(AuthContext); // Получаем из контекста
+  const { user, toggleLikeProduct, isAuthenticated, toggleCartProduct } = useContext(AuthContext); 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showSearchInHeader, setShowSearchInHeader] = useState(true);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // Стейт для модального окна
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); 
 
   useEffect(() => {
     const fetchSearchResults = async () => {
@@ -48,21 +48,19 @@ const SearchPage = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Функция для проверки, лайкнут ли товар
   const isProductLiked = (productId) => {
     return user?.likedProducts?.some((product) => product.id === productId);
   };
 
-  // Обработчик для лайков
   const handleLike = (e, productId) => {
-    e.stopPropagation(); // Останавливаем всплытие события
+    e.stopPropagation();
     e.preventDefault();
 
     if (isAuthenticated) {
       console.log("Toggling like for product", productId);
-      toggleLikeProduct(productId); // Обновляем лайк
+      toggleLikeProduct(productId);
     } else {
-      setIsLoginModalOpen(true); // Открываем модальное окно, если не авторизован
+      setIsLoginModalOpen(true); 
     }
   };
 

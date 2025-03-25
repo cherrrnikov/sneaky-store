@@ -12,10 +12,10 @@ const HomePage = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setShowSearchInHero(window.innerWidth < 1024); // Условие для переключения
+      setShowSearchInHero(window.innerWidth < 1024); 
     };
 
-    handleResize(); // Вызываем при монтировании
+    handleResize(); 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -30,8 +30,8 @@ const HomePage = () => {
           const headerHeight = document.getElementById('header').offsetHeight;
           
           window.scrollTo({
-            top: section.offsetTop - headerHeight, // Смещаем на высоту хедера
-            behavior: 'smooth' // Плавная прокрутка
+            top: section.offsetTop - headerHeight,
+            behavior: 'smooth'
           });
 
         }

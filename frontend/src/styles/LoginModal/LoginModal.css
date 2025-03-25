@@ -1,17 +1,13 @@
-/* LoginModal.css */
-
-/* Оверлей модального окна */
 .ReactModal__Overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6); /* Полупрозрачный черный фон */
-    z-index: 1000; /* Высокий z-index для перекрытия всего остального контента */
+    background-color: rgba(0, 0, 0, 0.6); 
+    z-index: 1000; 
   }
-  
-  /* Содержимое модального окна */
+
   .ReactModal__Content {
     position: absolute;
     top: 50%;
@@ -24,8 +20,7 @@
     width: 90%;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   }
-  
-  /* Заголовок модального окна */
+
   .ReactModal__Content h2 {
     margin-top: 0;
     margin-bottom: 20px;
@@ -34,7 +29,6 @@
     text-align: center;
   }
   
-  /* Стили для формы внутри модального окна */
   .ReactModal__Content form div {
     margin-bottom: 15px;
     display: flex;
@@ -53,8 +47,7 @@
     border-radius: 5px;
     font-size: 14px;
   }
-  
-  /* Кнопка отправки формы */
+ 
   .modal-submit-btn {
     background-color: #007bff;
     color: white;
@@ -72,8 +65,7 @@
     background-color: #0056b3;
     transform: scale(1.02);
   }
-  
-  /* Кнопка закрытия модального окна */
+
   .modal-close-btn {
     background-color: transparent;
     border: none;

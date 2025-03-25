@@ -48,3 +48,14 @@
 .mobile-search {
     min-width: 50%;
 }
+
+@media (max-width: 420px) {
+    button.back-button {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    h2.category-page_title {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+  }

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginModal from "../Login/LoginModal";
 import AuthContext from "../AuthContext";
@@ -12,7 +12,17 @@ const Header = ({ renderSearchForm }) => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024); // обновляем состояние при изменении ширины
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize); // очистка
+  }, []);
 
   const handleLikedClick = () => {
     if (isAuthenticated) {
@@ -24,12 +34,12 @@ const Header = ({ renderSearchForm }) => {
 
   const handleAuthRequired = () => {
     if (!isAuthenticated) {
-      setIsLoginModalOpen(true); // Открываем модальное окно, если пользователь не авторизован
+      setIsLoginModalOpen(true);
     }
   };
 
   const closeModal = () => {
-    setIsLoginModalOpen(false); // Закрываем модальное окно
+    setIsLoginModalOpen(false);
   };
 
   const handleCartClick = () => {
@@ -42,15 +52,15 @@ const Header = ({ renderSearchForm }) => {
 
   const handleUserMenuClick = () => {
     if (isAuthenticated) {
-      setIsUserMenuOpen(true); // Открываем меню пользователя
+      setIsUserMenuOpen(true);
     } else {
-      setIsLoginModalOpen(true); // Открываем окно логина, если не авторизован
+      setIsLoginModalOpen(true);
     }
   };
 
   const handleLogout = () => {
-    logout();  // Логика выхода из системы
-    setIsUserMenuOpen(false);  // Закрываем меню пользователя после выхода
+    logout(); 
+    setIsUserMenuOpen(false); 
   };
 
   return (
@@ -72,7 +82,7 @@ const Header = ({ renderSearchForm }) => {
             </ul>
           </nav>
 
-          {renderSearchForm && <SearchForm />}
+          {!isMobile && renderSearchForm && <SearchForm />}
 
           <div className="flex gap-x-4 items-center">
             <button className="w-9 h-8 flex items-center justify-center" onClick={handleLikedClick}>

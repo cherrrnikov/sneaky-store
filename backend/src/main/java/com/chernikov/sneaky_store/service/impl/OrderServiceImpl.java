@@ -59,12 +59,10 @@ public class OrderServiceImpl implements OrderService {
             Product product = productRepository.findById(orderItem.getProduct().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
 
-            // Убедитесь, что цена и название товара корректно присваиваются
             orderItem.setProduct(product);
             orderItem.setPrice(product.getPrice());
         });
 
-        // Если цена заказа не рассчитывается в других местах, посчитайте её вручную
         BigDecimal totalPrice = order.getOrderItems().stream()
                 .map(item -> item.getPrice().multiply(new BigDecimal(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -116,27 +114,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void addToOrder(Long userId, OrderItemDTO orderItemDTO) {
-        // Получаем заказ по userId
         Order order = orderRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        // Получаем продукт по ID
         Product product = productRepository.findById(orderItemDTO.getProductID())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        // Создаем новый OrderItem
         OrderItem orderItem = new OrderItem();
-        orderItem.setProduct(product);  // Связываем с продуктом через его объект
+        orderItem.setProduct(product);
         orderItem.setQuantity(orderItemDTO.getQuantity());
         orderItem.setPrice(orderItemDTO.getPrice());
 
-        // Добавляем OrderItem в заказ
         order.getOrderItems().add(orderItem);
 
-        // Обновляем общую стоимость заказа
         order.setTotalPrice(order.getTotalPrice().add(orderItem.getPrice()));
 
-        // Сохраняем изменения в заказе
         orderRepository.save(order);
     }
 
@@ -154,7 +146,7 @@ public class OrderServiceImpl implements OrderService {
         order.getOrderItems().remove(orderItem);
         order.setTotalPrice(order.getTotalPrice().subtract(orderItem.getPrice()));
 
-        orderRepository.save(order); // Сохраняем изменения, но не возвращаем объект.
+        orderRepository.save(order);
     }
 
 

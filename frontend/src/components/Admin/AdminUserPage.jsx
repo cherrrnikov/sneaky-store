@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import api from "../../services/api"; // Импортируем API для запросов
+import api from "../../services/api";
 import "../../styles/Admin/AdminUserPage.css";
 import { useNavigate } from "react-router-dom";
 
 const orderStatuses = ["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"];
-const availableRoles = ["ADMIN"]; // Доступные роли, кроме USER
+const availableRoles = ["ADMIN"]; 
 
 const AdminUserPage = () => {
   const [users, setUsers] = useState([]);
@@ -103,7 +103,7 @@ const AdminUserPage = () => {
         console.log("USERID", userId)
     try {
         await api.delete(`/admin/users/${userId}`);
-        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId)); // Удаляем пользователя из списка
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
     } catch (err) {
         setError("Ошибка при удалении пользователя");
     }
@@ -146,7 +146,6 @@ const AdminUserPage = () => {
                 <td>
                   {user.roles
                     .sort((a, b) => {
-                      // Always make sure 'USER' is first
                       if (a === "USER") return -1;
                       if (b === "USER") return 1;
                       return 0;
@@ -185,8 +184,7 @@ const AdminUserPage = () => {
                   </button>
                 </td>
               </tr>
-  
-              {/* Отображение заказов пользователя */}
+
               {orders[user.id] && (
                 <tr>
                   <td colSpan="5">

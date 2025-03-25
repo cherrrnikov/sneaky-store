@@ -57,7 +57,7 @@ public class OrderController {
     public ResponseEntity<Void> addToOrder(@PathVariable("orderId") Long orderId, @RequestBody OrderItemDTO orderItemDTO) {
         try {
             orderService.addToOrder(orderId, orderItemDTO);
-            return ResponseEntity.ok().build(); // Теперь мы возвращаем статус 200 без объекта
+            return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
@@ -67,7 +67,7 @@ public class OrderController {
     public ResponseEntity<Void> deleteFromOrder(@PathVariable("orderId") Long orderId, @RequestBody OrderItemDTO orderItemDTO) {
         try {
             orderService.deleteFromOrder(orderId, orderItemDTO);
-            return ResponseEntity.ok().build(); // Теперь мы возвращаем статус 200 без объекта
+            return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }

@@ -10,32 +10,27 @@ const AdminPage = () => {
 
   useEffect(() => {
     if (isAuthenticated && !user?.roles.includes("ADMIN")) {
-      // Если пользователь не администратор, редиректим на страницу входа
       navigate("/admin-login");
     }
   }, [user, isAuthenticated, navigate]);
 
   const handleLogout = () => {
-    logout(); // Используем logout из контекста для выхода
-    navigate("/admin-login"); // Редирект на страницу входа после выхода
+    logout(); 
+    navigate("/admin-login"); 
   };
 
-  // Если данные еще загружаются
   if (loading) {
     return <div>Загрузка...</div>;
   }
 
-  // Если ошибка при запросах или другом процессе
   if (error) {
     return <div>Ошибка: {error}</div>;
   }
 
-  // Если пользователь не авторизован
   if (!isAuthenticated) {
     navigate("/admin-login");
   }
 
-  // Если пользователь не является администратором
   if (!user?.roles.includes("ADMIN")) {
     return <div>Доступ запрещен: Вы не являетесь администратором.</div>;
   }

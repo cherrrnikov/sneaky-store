@@ -6,12 +6,12 @@
     align-items: center;
     justify-content: center;
 }
-.search_back-button {
+.search_back-button.back-button {
     color: #000000;
     border: 2px solid rgb(0, 0, 0);
 }
 
-.search_back-button:hover {
+.search_back-button.back-button:hover {
     background: #000000;
     color: #ffffff;
 }
@@ -30,3 +30,17 @@
     font-weight: bold;
     margin-bottom: 10px;
 }
+
+@media (max-width: 420px) {
+    .search_back-button.back-button {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    h2.search-title {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+    .search-header {
+        margin-bottom: 0px;
+    }
+  }

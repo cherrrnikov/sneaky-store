@@ -1,55 +1,74 @@
-import axios from 'axios';
+import axios from "axios";
+import Cookies from "js-cookie";
 
-const API_URL = "http://localhost:8080/api"
-
-
+const API_URL = "http://localhost:8080/api";
 
 const api = axios.create({
-    baseURL: API_URL,
-    withCredentials: true // Обязательно указываем с учетом кросс-доменных запросов
+  baseURL: API_URL,
+  withCredentials: true,
 });
 
-// Перехватчик для обработки ошибок
+let isRefreshing = false;
+let refreshSubscribers = [];
+
+const onRefreshed = (newAccessToken) => {
+  refreshSubscribers.forEach((callback) => callback(newAccessToken));
+  refreshSubscribers = [];
+};
+
 api.interceptors.response.use(
-    response => response,
-    async error => {
-      // Если ошибка 401 (неавторизован), то пытаемся обновить токен
-      if (error.response && error.response.status === 401) {
-        try {
-          // Получаем refreshToken из куков
-          const refreshToken = getCookie('refreshToken');
-          
-          if (refreshToken) {
-            const response = await api.post('/auth/refresh', {}, { withCredentials: true });
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
-            // Обновляем токены в куках
-            const { accessToken, refreshToken: newRefreshToken } = response.data;
-            setCookie('accessToken', accessToken);
-            setCookie('refreshToken', newRefreshToken);
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; // Чтобы не зациклиться
+      console.log("Access token expired. Trying to refresh...");
 
-            // Повторяем исходный запрос с новыми токенами (которые будут извлечены из куков)
-            return api(error.config); // Перезапуск запроса
-          }
-        } catch (e) {
-          // Если не удается обновить токены, выводим ошибку
-          console.error('Ошибка обновления токена', e);
-        }
+      if (isRefreshing) {
+        return new Promise((resolve) => {
+          refreshSubscribers.push((token) => {
+            originalRequest.headers["Authorization"] = `Bearer ${token}`;
+            resolve(api(originalRequest));
+          });
+        });
       }
-      // В случае других ошибок — просто передаем их дальше
-      return Promise.reject(error);
+
+      isRefreshing = true;
+
+      try {
+        const refreshToken = Cookies.get("refreshToken");
+        if (!refreshToken) throw new Error("No refresh token found!");
+
+        const response = await axios.post(
+          `${API_URL}/auth/refresh`,
+          { refreshToken },
+          { withCredentials: true }
+        );
+
+        const { accessToken, refreshToken: newRefreshToken } = response.data;
+
+        Cookies.set("accessToken", accessToken, { expires: 1, sameSite: "None", secure: true });
+        Cookies.set("refreshToken", newRefreshToken, { expires: 7, sameSite: "None", secure: true });
+
+        console.log("New tokens received:", { accessToken, refreshToken: newRefreshToken });
+
+        api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        onRefreshed(accessToken);
+        return api(originalRequest);
+      } catch (err) {
+        console.error("Error refreshing token:", err);
+        Cookies.remove("accessToken");
+        Cookies.remove("refreshToken");
+        window.location.href = "/login"; 
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
     }
+
+    return Promise.reject(error);
+  }
 );
-
-// Функция для получения cookie по имени
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-}
-
-// Функция для установки cookie
-function setCookie(name, value) {
-  document.cookie = `${name}=${value}; path=/; SameSite=None; Secure=false`;
-}
 
 export default api;

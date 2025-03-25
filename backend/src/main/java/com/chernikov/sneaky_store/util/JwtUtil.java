@@ -22,7 +22,7 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    private static final long ACCESS_EXPIRATION_TIME = 15 * 60 * 1000;
+    private static final long ACCESS_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
     private static final long REFRESH_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000;
 
     private Key getSecretKey() {

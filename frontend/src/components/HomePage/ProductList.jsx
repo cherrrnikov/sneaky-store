@@ -4,7 +4,7 @@ import "../../styles/HomePage/ProductList.css";
 import api from "../../services/api";
 import LoginModal from "../Login/LoginModal";
 import AuthContext from "../AuthContext";
-import ProductCard from "../ProductPage/ProductCard";  // Импортируем новый компонент карточки товара
+import ProductCard from "../ProductPage/ProductCard";
 
 const ProductList = () => {
   const { user, isAuthenticated, toggleLikeProduct, fetchLikedProducts, fetchCartProducts, toggleCartProduct } = useContext(AuthContext);
@@ -38,7 +38,7 @@ const ProductList = () => {
   }, [user?.id])
 
   const handleLike = (e, productId) => {
-    e.stopPropagation(); // Останавливаем всплытие события
+    e.stopPropagation();
     e.preventDefault();
 
     if (isAuthenticated) {

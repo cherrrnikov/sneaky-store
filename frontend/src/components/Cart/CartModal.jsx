@@ -14,9 +14,9 @@ const CartModal = ({ isOpen, onClose }) => {
   const [error, setError] = useState("");
   const [products, setProducts] = useState([]);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [isOrderSuccessOpen, setIsOrderSuccessOpen] = useState(false); // Новое состояние для модального окна успешного заказа
+  const [isOrderSuccessOpen, setIsOrderSuccessOpen] = useState(false);
   const navigate = useNavigate();
-  // Загружаем информацию о товарах
+
   useEffect(() => {
     if (user?.cart && user.cart.length > 0) {
       setCart(user.cart);
@@ -32,29 +32,26 @@ const CartModal = ({ isOpen, onClose }) => {
 
   const handleCheckoutSuccess = () => {
     setIsCheckoutOpen(false);
-    onClose(); // Закрываем корзину
-    setIsOrderSuccessOpen(true); // Открываем окно подтверждения
+    onClose(); 
+    setIsOrderSuccessOpen(true); 
   };
 
   const handleCheckoutClick = () => {
-    setIsCheckoutOpen(true); // Открываем модальное окно оформления заказа
+    setIsCheckoutOpen(true);
   };
 
   const getProductDetails = (productID) => {
-    // Ищем продукт в локальном состоянии
     return products.find((product) => product.id === productID);
   };
 
   const handleAddItem = async (productID) => {
     try {
-      // Отправляем запрос на сервер для добавления товара в корзину
       await api.post(`/cart/${user.id}`, { productID });
 
-      // Локально обновляем количество товара в корзине
       setCart((prevCart) => {
         return prevCart.map((item) => {
           if (item.productID === productID) {
-            return { ...item, quantity: item.quantity + 1 }; // Увеличиваем количество
+            return { ...item, quantity: item.quantity + 1 }; 
           }
           return item;
         });
@@ -64,17 +61,15 @@ const CartModal = ({ isOpen, onClose }) => {
     }
   };
 
-  // Уменьшение количества товара
   const handleDecrementItem = async (cartItemId, quantity) => {
     try {
       if (quantity > 1) {
         await api.delete(`/cart/${user.id}/remove/${cartItemId}`);
 
-        // Локально уменьшаем количество товара в корзине
         setCart((prevCart) => {
           return prevCart.map((item) => {
             if (item.id === cartItemId) {
-              return { ...item, quantity: item.quantity - 1 }; // Уменьшаем количество
+              return { ...item, quantity: item.quantity - 1 };
             }
             return item;
           });
@@ -82,7 +77,6 @@ const CartModal = ({ isOpen, onClose }) => {
       } else {
         await api.delete(`/cart/${user.id}/remove/${cartItemId}/full`);
 
-        // Локально удаляем товар из корзины
         setCart((prevCart) => prevCart.filter((item) => item.id !== cartItemId));
       }
     } catch (error) {
@@ -90,58 +84,29 @@ const CartModal = ({ isOpen, onClose }) => {
     }
   };
 
-  // Полное удаление товара из корзины
   const handleDeleteItem = async (cartItemId) => {
     try {
       await api.delete(`/cart/${user.id}/remove/${cartItemId}/full`);
-
-      // Локально удаляем товар из корзины
       setCart((prevCart) => prevCart.filter((item) => item.id !== cartItemId));
     } catch (error) {
       setError("Ошибка при полном удалении товара.");
     }
   };
 
-  // Сохранение данных при выходе из корзины
   const handleSaveAndClose = async () => {
     try {
-      // Отправляем обновленные данные о корзине на сервер (при закрытии)
         const { data: updatedCart } = await api.get(`/cart/${user.id}`, { withCredentials: true });
-  
-        // Обновляем состояние пользователя с актуальной корзиной
+
         setUser((prevUser) => ({
           ...prevUser,
-          cart: updatedCart.cartItems, // Обновляем корзину
+          cart: updatedCart.cartItems,
         }));
 
-      onClose(); // Закрываем модальное окно
+      onClose(); 
     } catch (error) {
       setError("Ошибка при сохранении корзины.");
     }
   };
-
-
-  // const handleCheckoutSubmit = async (orderData) => {
-  //   console.log("DATA", orderData)
-  //   try {
-  //     const response = await api.post("/orders", {
-  //       userID: orderData.userID,
-  //       deliveryAddress: orderData.deliveryAddress,
-  //       orderItems: orderData.orderItems, // Отправляем товары сразу
-  //       totalPrice: orderData.totalPrice,  // Передаем общую стоимость
-  //     });
-  
-  //     const createdOrder = response.data; // Получаем созданный заказ
-  //     console.log("Создан заказ: ", createdOrder);
-  
-  //     setCart([]); // Очищаем корзину после успешного оформления заказа
-  //     setIsCheckoutOpen(false); // Закрываем модальное окно оформления заказа
-  //     onClose(); // Закрываем модальное окно корзины
-  //   } catch (error) {
-  //     setError("Ошибка при оформлении заказа.");
-  //     console.error("Ошибка оформления заказа:", error);
-  //   }
-  // };
 
   return (
     <>
@@ -159,6 +124,7 @@ const CartModal = ({ isOpen, onClose }) => {
           ) : (
             cart.map((item) => {
               const product = getProductDetails(item.productID);
+              console.log("PRODUCT", product)
               return (
                 <div key={item.id} className="cart-item">
                   <img
@@ -207,12 +173,11 @@ const CartModal = ({ isOpen, onClose }) => {
         </div>
       </ReactModal>
 
-      {/* Новое модальное окно для оформления заказа */}
       <CheckoutModal
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
         cartItems={cart}
-        products={products}  // Pass products here
+        products={products}
         userID={user?.id} 
         setCart={setCart}
         onSuccess={handleCheckoutSuccess}

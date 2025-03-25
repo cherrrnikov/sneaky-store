@@ -7,8 +7,7 @@ ReactModal.setAppElement("#root");
 const CheckoutModal = ({ isOpen, onClose, cartItems, products, userID, setCart, onSuccess }) => {
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [error, setError] = useState("");
-  
-  // Функция для подсчета общей стоимости
+
   const calculateTotalPrice = () => {
     return cartItems.reduce((sum, item) => {
       const product = products.find((p) => p.id === item.productID);
@@ -19,17 +18,25 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, products, userID, setCart, 
     }, 0);
   };
 
-  const handleSubmit = async () => {
-    const totalPrice = calculateTotalPrice(); // Рекомендуется вычислять стоимость тут
+  const handleSubmit = async (e) => {
+    e.preventDefault();  
+
+    if (!deliveryAddress.trim()) {
+      setError("Адрес доставки не может быть пустым!");
+      return; // Не продолжаем отправку формы
+    }
+
+    const totalPrice = calculateTotalPrice(); 
 
     const orderData = {
-      userID, // ID пользователя
-      deliveryAddress, // Адрес доставки
+      userID, 
+      deliveryAddress, 
       totalPrice,
       orderItems: cartItems.map((item) => {
-        const product = products.find((p) => p.id === item.productID); // Найдем продукт в списке
+        const product = products.find((p) => p.id === item.productID); 
         return {
           productID: item.productID,
+          photoURL: product?.photoURL,
           productName: product?.name || "Unmatched product",
           quantity: item.quantity,
           price: product?.price || 0,
@@ -37,17 +44,15 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, products, userID, setCart, 
       }),
     };
 
-    console.log("Order Data to submit:", orderData); // Добавим логирование для проверки
+    console.log("Order Data to submit:", orderData);
 
     try {
-      const response = await api.post("/orders", orderData); // Отправка заказа на сервер
-      const createdOrder = response.data; // Получаем созданный заказ
+      const response = await api.post("/orders", orderData);
+      const createdOrder = response.data; 
       console.log("Создан заказ: ", createdOrder);
 
-
-      // Очищаем корзину после успешного оформления заказа
       setCart([]);
-      onClose(); // Закрываем модальное окно оформления заказа
+      onClose();
       onSuccess();
     } catch (error) {
       setError("Ошибка при оформлении заказа.");
@@ -63,12 +68,18 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, products, userID, setCart, 
       className="ReactModal__Content"
       overlayClassName="ReactModal__Overlay"
     >
+      <form action="POST">
       <h2 className="modal-title">Оформление заказа</h2>
       <div className="checkout-items">
         {cartItems.map((item) => {
           const product = products.find((p) => p.id === item.productID);
           return (
             <div key={item.id} className="checkout-item">
+                            <img
+                src={product?.photoURL || "/default-image.png"}
+                alt={product?.name || "Product"}
+                className="cart-item-image"
+              />
               <div className="item-name">{product?.name || "Товар"}</div>
               <div className="item-quantity">Количество: {item.quantity}</div>
               <div className="item-price">
@@ -82,12 +93,13 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, products, userID, setCart, 
         <label>
           Адрес доставки:
           <input
-            required
             type="text"
             value={deliveryAddress}
             onChange={(e) => setDeliveryAddress(e.target.value)}
+            required
           />
         </label>
+        {error && <p className="error-message" style={{ color: "red" }}>{error}</p>}
         <div className="total-price">Общая стоимость: ${calculateTotalPrice()}</div>
       </div>
       <div className="checkout-actions">
@@ -98,6 +110,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, products, userID, setCart, 
           Закрыть
         </button>
       </div>
+      </form>
     </ReactModal>
   );
 };

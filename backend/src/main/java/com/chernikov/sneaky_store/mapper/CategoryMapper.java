@@ -35,7 +35,7 @@ public abstract class CategoryMapper {
     public List<Product> mapToProducts(List<Long> productIDs) {
         return productIDs.stream()
                 .map(id -> productRepository.findById(id).orElse(null))
-                .filter(product -> product != null) // Filter out nulls in case some IDs are not found
+                .filter(product -> product != null)
                 .collect(Collectors.toList());
     }
 }
