@@ -40,7 +40,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String email = jwtUtil.extractEmail(accessToken);
             List<SimpleGrantedAuthority> authorities = getAuthoritiesFromToken(accessToken);
 
-            // Создаем аутентификацию пользователя и сохраняем ее в SecurityContext
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(email, null, authorities);
 
@@ -67,9 +66,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private List<SimpleGrantedAuthority> getAuthoritiesFromToken(String token) {
         Claims claims = jwtUtil.getClaims(token);
-        List<String> roles = claims.get("roles", List.class); // Извлекаем список ролей
+        List<String> roles = claims.get("roles", List.class);
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role)) // Преобразуем роли в SimpleGrantedAuthority
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
     }
 }

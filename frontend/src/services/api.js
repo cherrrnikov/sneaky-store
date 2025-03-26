@@ -2,7 +2,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const API_URL = "http://localhost:8080/api";
-
 const api = axios.create({
   baseURL: API_URL,
   withCredentials: true,
@@ -37,6 +36,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
+
         const refreshToken = Cookies.get("refreshToken");
         if (!refreshToken) throw new Error("No refresh token found!");
 

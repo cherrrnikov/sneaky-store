@@ -15,6 +15,9 @@ import AdminUserPage from './components/Admin/AdminUserPage';
 import AdminCategoryPage from './components/Admin/AdminCategoryPage';
 
 const App = () => {
+  console.log("API DOCKER: ", import.meta.env.VITE_API_URL_DOCKER)
+  console.log("API LOCAL: ", import.meta.env.VITE_API_URL_LOCAL)
+
   return (
     <AuthProvider>
         <Router>
